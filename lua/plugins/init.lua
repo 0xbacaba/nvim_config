@@ -8,9 +8,11 @@ return {
         "tsserver",
         "jdtls",
         "java-debug",
+        "java-test",
       },
       automatic_installation = true,
     },
+    config = function() require("mason").setup() end,
   },
   {
     "williamboman/mason-lspconfig.nvim",
