@@ -113,11 +113,24 @@ return {
     -- current project found using the root_marker as the folder for project specific data.
     local workspace_folder = xdg_data_home .. "/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
-    local bundles = {
-      vim.fn.glob(
-        nvim_data .. "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
-      ),
-    }
+    local bundles = {}
+
+    -- Include java-test bundle
+    local java_test_path = require("mason-registry").get_package("java-test"):get_install_path()
+    local java_test_bundle = vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar"), "\n")
+
+    if java_test_bundle[1] ~= "" then vim.list_extend(bundles, java_test_bundle) end
+
+    -- Include java-debug-adapter bundle
+    local java_debug_path = require("mason-registry").get_package("java-debug-adapter"):get_install_path()
+    local java_debug_bundle =
+      vim.split(vim.fn.glob(java_debug_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar"), "\n")
+    if java_debug_bundle[1] ~= "" then vim.list_extend(bundles, java_debug_bundle) end
+
+    local jdtls_install = require("mason-registry").get_package("jdtls"):get_install_path()
+
+    local java_agent = jdtls_install .. "/lombok.jar"
+    local launcher_jar = vim.fn.glob(jdtls_install .. "/plugins/org.eclipse.equinox.launcher_*.jar")
 
     -- The on_attach function is used to set key maps after the language server
     -- attaches to the current buffer
@@ -231,18 +244,14 @@ return {
         "java.base/java.util=ALL-UNNAMED",
         "--add-opens",
         "java.base/java.lang=ALL-UNNAMED",
-        -- If you use lombok, download the lombok jar and place it in ~/.local/share/eclipse
-        -- "-javaagent:"
-        --   .. home
-        --   .. "/.local/share/eclipse/lombok.jar",
+        "--module-path",
+        table.concat(java_test_bundle, ":"),
 
-        -- The jar file is located where jdtls was installed. This will need to be updated
-        -- to the location where you installed jdtls
+        "-javaagent:" .. java_agent,
+
         "-jar",
-        vim.fn.glob(nvim_data .. "/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
+        launcher_jar,
 
-        -- The configuration for jdtls is also placed where jdtls was installed. This will
-        -- need to be updated depending on your environment
         "-configuration",
         get_config(),
 
