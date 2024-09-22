@@ -1,13 +1,21 @@
 return {
-  nnoremap = function(rhs, lhs, bufopts, desc)
+  nnoremap = function(lhs, rhs, bufopts, desc)
+    if lhs == nil or rhs == nil then
+      vim.notify("tried to nmap nil value " .. tostring(lhs) .. " -> " .. tostring(rhs), vim.log.levels.WARN)
+      return
+    end
     bufopts.desc = desc
-    vim.keymap.set("n", rhs, lhs, bufopts)
+    vim.keymap.set("n", lhs, rhs, bufopts)
   end,
-  vnoremap = function(rhs, lhs, bufopts, desc)
+  vnoremap = function(lhs, rhs, bufopts, desc)
+    if lhs == nil or rhs == nil then
+      vim.notify("tried to vmap nil value " .. tostring(lhs) .. " -> " .. tostring(rhs), vim.log.levels.WARN)
+      return
+    end
     bufopts.desc = desc
-    vim.keymap.set("v", rhs, lhs, bufopts)
+    vim.keymap.set("v", lhs, rhs, bufopts)
   end,
-  set_lsp_keybinds = function(_client, bufnr)
+  set_lsp_keybinds = function(_, bufnr)
     local utils = require "utils"
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
     utils.nnoremap("<leader>lD", vim.lsp.buf.declaration, bufopts, "Go to declaration")
@@ -26,7 +34,7 @@ return {
     utils.nnoremap("<leader>D", vim.lsp.buf.type_definition, bufopts, "Go to type definition")
     utils.nnoremap("<leader>lr", vim.lsp.buf.rename, bufopts, "Rename")
     utils.nnoremap("<leader>la", vim.lsp.buf.code_action, bufopts, "Code actions")
-    utils.vnoremap("<leader>la", vim.lsp.buf.range_code_action, bufopts, "Code actions")
+    utils.vnoremap("<leader>la", vim.lsp.buf.code_action, bufopts, "Code actions")
     utils.nnoremap("<leader>lf", function() vim.lsp.buf.format { async = true } end, bufopts, "Format file")
   end,
 }
