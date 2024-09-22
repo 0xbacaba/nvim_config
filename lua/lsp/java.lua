@@ -1,34 +1,129 @@
+local function detect_jdks()
+  local jdks = {}
+  local uname = vim.fn.system("uname"):gsub("\n", "")
+  print(uname)
+
+  -- macOS: use /usr/libexec/java_home to detect installed JDKs
+  if uname == "Darwin" then
+    local handle = io.popen "/usr/libexec/java_home -V 2>&1"
+    if handle == nil then
+      vim.notify("couldn't detect jdks", vim.log.levels.WARN)
+      return {}
+    end
+
+    local result = handle:read "*a"
+    handle:close()
+
+    local lines = {}
+    for line in result:gmatch "[^\r\n]+" do
+      table.insert(lines, line)
+    end
+
+    -- Remove first line (header) and last line (default JDK path)
+    table.remove(lines, 1)
+    table.remove(lines, #lines)
+
+    -- Parse lines to extract version and path
+    for _, line in ipairs(lines) do
+      local version, path = line:match "(%d+)[^/]*(/%S+/Contents/Home)"
+      if version and path then
+        print("found jdk for version " .. version .. ": " .. path)
+        table.insert(jdks, {
+          name = "JavaSE-" .. version,
+          path = path,
+        })
+      end
+    end
+
+    -- Linux: scan common JDK install paths
+  elseif uname == "Linux" then
+    local jdk_paths = { "/usr/lib/jvm", "/usr/java" }
+
+    for _, jdk_dir in ipairs(jdk_paths) do
+      local handle = io.popen("find " .. jdk_dir .. " -maxdepth 3 -type f -name javac -exec dirname {} \\;")
+      if handle == nil then
+        vim.notify("couldn't detect jdks", vim.log.levels.WARN)
+        return {}
+      end
+
+      for line in handle:lines() do
+        local version = line:match "java%-(%d+)%-"
+        local path = line:gsub("/bin$", "")
+        print("found jdk for version " .. version .. ": " .. path)
+        table.insert(jdks, {
+          name = "JavaSE-" .. version,
+          path = path,
+        })
+      end
+      handle:close()
+    end
+  end
+
+  return jdks
+end
+
+local home = os.getenv "HOME"
+local xdg_data_home = os.getenv "XDG_DATA_HOME" or home .. "/.local/share"
+local function find_nvim_data()
+  local default = home .. "/.local/share/nvim"
+  local potential_paths = {
+    xdg_data_home and (xdg_data_home .. "/nvim"),
+    default,
+  }
+
+  for _, path in ipairs(potential_paths) do
+    if vim.fn.isdirectory(path) then return path end
+  end
+
+  vim.notify("could not find nvim data directory. will default to " .. default, vim.log.levels.WARN)
+  return default
+end
+
+local nvim_data = find_nvim_data()
+
+local function get_config()
+  local common = nvim_data .. "/mason/packages/jdtls/config_"
+  local uname = vim.fn.system("uname"):gsub("\n", "")
+  local arch = vim.fn.system("uname", "-m"):gsub("\n", "")
+
+  local os
+  if uname == "Linux" then
+    os = common .. "linux"
+  elseif uname == "Darwin" then
+    os = common .. "mac"
+  end
+
+  if arch:match "(aarch)|(arm)" ~= "" then return os .. "_arm" end
+
+  return os
+end
+
 return {
   setup = function()
-    local home = os.getenv "HOME"
     local jdtls = require "jdtls"
     local lspconfig = require "lspconfig"
 
     -- File types that signify a Java project's root directory. This will be
     -- used by eclipse to determine what constitutes a workspace
-    local root_dir = require("jdtls.setup").find_root { "gradlew", "mvnw", ".git", "pom.xml" }
+    local root_markers = { "gradlew", "mvnw", ".git", "pom.xml", ".classpath" }
+    local root_dir = require("jdtls.setup").find_root(root_markers)
 
     -- eclipse.jdt.ls stores project specific data within a folder. If you are working
     -- with multiple different projects, each project must use a dedicated data directory.
     -- This variable is used to configure eclipse to use the directory name of the
     -- current project found using the root_marker as the folder for project specific data.
-    local workspace_folder = home .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
+    local workspace_folder = xdg_data_home .. "/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
     local bundles = {
       vim.fn.glob(
-        home
-          .. "/.local/share/nvim/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
+        nvim_data .. "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
       ),
     }
 
     -- The on_attach function is used to set key maps after the language server
     -- attaches to the current buffer
     local on_attach = function(client, bufnr)
-      vim.notify "java.lua: on_attach head"
-
-      vim.notify "java.lua: on_attach pre setup_dap"
       require("jdtls").setup_dap { hotcodereplace = "auto", config_overrides = {} }
-      vim.notify "java.lua: on_attach post setup_dap"
 
       -- Regular Neovim LSP client keymappings
       local utils = require "utils"
@@ -52,7 +147,7 @@ return {
         debounce_text_changes = 80,
       },
       on_attach = on_attach, -- We pass our on_attach keybindings to the configuration map
-      root_dir = lspconfig.util.root_pattern("gradlew", "mvnw", ".git", "pom.xml"), -- Set the root directory to our found root_marker
+      root_dir = lspconfig.util.root_pattern(table.unpack(root_markers)), -- Set the root directory to our found root_marker
       init_options = {
         bundles = bundles,
       },
@@ -67,7 +162,7 @@ return {
               -- Use Google Java style guidelines for formatting
               -- To use, make sure to download the file from https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
               -- and place it in the ~/.local/share/eclipse directory
-              url = "/.local/share/eclipse/eclipse-java-google-style.xml",
+              url = xdg_data_home .. "/eclipse/eclipse-java-google-style.xml",
               profile = "GoogleStyle",
             },
           },
@@ -115,24 +210,7 @@ return {
           -- And search for `interface RuntimeOption`
           -- The `name` is NOT arbitrary, but must match one of the elements from `enum ExecutionEnvironment` in the link above
           configuration = {
-            runtimes = {
-              {
-                name = "JavaSE-22",
-                path = "/usr/lib/jvm/java-22-openjdk",
-              },
-              {
-                name = "JavaSE-21",
-                path = "/usr/lib/jvm/java-21-openjdk",
-              },
-              {
-                name = "JavaSE-17",
-                path = "/usr/lib/jvm/java-17-openjdk",
-              },
-              {
-                name = "JavaSE-11",
-                path = "/usr/lib/jvm/java-11-openjdk",
-              },
-            },
+            runtimes = detect_jdks(),
           },
         },
       },
@@ -162,12 +240,12 @@ return {
         -- The jar file is located where jdtls was installed. This will need to be updated
         -- to the location where you installed jdtls
         "-jar",
-        vim.fn.glob(home .. "/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
+        vim.fn.glob(nvim_data .. "/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
 
         -- The configuration for jdtls is also placed where jdtls was installed. This will
         -- need to be updated depending on your environment
         "-configuration",
-        home .. "/.local/share/nvim/mason/packages/jdtls/config_linux",
+        get_config(),
 
         -- Use the workspace_folder defined above to store data for this project
         "-data",
