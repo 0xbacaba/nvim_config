@@ -1,7 +1,6 @@
 local function detect_jdks()
   local jdks = {}
   local uname = vim.fn.system("uname"):gsub("\n", "")
-  print(uname)
 
   -- macOS: use /usr/libexec/java_home to detect installed JDKs
   if uname == "Darwin" then
@@ -84,7 +83,7 @@ local nvim_data = find_nvim_data()
 local function get_config()
   local common = nvim_data .. "/mason/packages/jdtls/config_"
   local uname = vim.fn.system("uname"):gsub("\n", "")
-  local arch = vim.fn.system("uname", "-m"):gsub("\n", "")
+  local arch = vim.fn.system("uname -m"):gsub("\n", "")
 
   local os
   if uname == "Linux" then
@@ -93,7 +92,7 @@ local function get_config()
     os = common .. "mac"
   end
 
-  if arch:match "(aarch)|(arm)" ~= "" then return os .. "_arm" end
+  if arch:match "aarch" or arch:match "arm" then return os .. "_arm" end
 
   return os
 end
