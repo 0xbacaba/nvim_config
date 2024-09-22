@@ -130,7 +130,7 @@ return {
 
       -- Java extensions provided by jdtls
       local bufopts = { noremap = true, silent = true, buffer = bufnr }
-      utils.nnoremap("<C-o>", jdtls.organize_imports, bufopts, "Organize imports")
+      utils.nnoremap("<leader>lo", jdtls.organize_imports, bufopts, "Organize imports")
       utils.nnoremap("<leader>lev", jdtls.extract_variable, bufopts, "Extract variable")
       utils.nnoremap("<leader>lec", jdtls.extract_constant, bufopts, "Extract constant")
       utils.vnoremap(
