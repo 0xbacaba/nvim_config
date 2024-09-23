@@ -134,8 +134,6 @@ return {
     local java_test_path = require("mason-registry").get_package("java-test"):get_install_path()
     local java_test_bundle = vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar"), "\n")
 
-    if java_test_bundle[1] ~= "" then vim.list_extend(bundles, java_test_bundle) end
-
     -- Include java-debug-adapter bundle
     local java_debug_path = require("mason-registry").get_package("java-debug-adapter"):get_install_path()
     local java_debug_bundle =
