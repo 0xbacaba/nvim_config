@@ -75,24 +75,10 @@ local function detect_jdks()
   return jdks
 end
 
-local home = os.getenv "HOME"
-local xdg_data_home = os.getenv "XDG_DATA_HOME" or home .. "/.local/share"
-local function find_nvim_data()
-  local default = home .. "/.local/share/nvim"
-  local potential_paths = {
-    xdg_data_home and (xdg_data_home .. "/nvim"),
-    default,
-  }
-
-  for _, path in ipairs(potential_paths) do
-    if vim.fn.isdirectory(path) then return path end
-  end
-
-  vim.notify("could not find nvim data directory. will default to " .. default, vim.log.levels.WARN)
-  return default
-end
-
-local nvim_data = find_nvim_data()
+local utils = require "utils"
+local nvim_data = utils.find_nvim_data()
+local nvim_cache = utils.find_nvim_cache()
+local nvim_lsp_cache = nvim_cache .. "/lsp"
 
 local function get_config()
   local common = nvim_data .. "/mason/packages/jdtls/config_"
@@ -125,7 +111,7 @@ return {
     -- with multiple different projects, each project must use a dedicated data directory.
     -- This variable is used to configure eclipse to use the directory name of the
     -- current project found using the root_marker as the folder for project specific data.
-    local workspace_folder = xdg_data_home .. "/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
+    local workspace_folder = nvim_lsp_cache .. "/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
     local detected_jdks = detect_jdks()
     local bundles = {}
@@ -151,7 +137,6 @@ return {
       require("jdtls").setup_dap { hotcodereplace = "auto", config_overrides = {} }
 
       -- Regular Neovim LSP client keymappings
-      local utils = require "utils"
       utils.set_lsp_keybinds(client, bufnr)
 
       -- Java extensions provided by jdtls
@@ -191,7 +176,7 @@ return {
               -- Use Google Java style guidelines for formatting
               -- To use, make sure to download the file from https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
               -- and place it in the ~/.local/share/eclipse directory
-              url = xdg_data_home .. "/eclipse/eclipse-java-google-style.xml",
+              url = utils.xdg_data_home .. "/eclipse/eclipse-java-google-style.xml",
               profile = "GoogleStyle",
             },
           },
