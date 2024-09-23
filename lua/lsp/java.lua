@@ -53,7 +53,7 @@ local function detect_jdks()
     local jdk_paths = { "/usr/lib/jvm", "/usr/java" }
 
     for _, jdk_dir in ipairs(jdk_paths) do
-      local handle = io.popen("find " .. jdk_dir .. " -maxdepth 3 -type f -name javac -exec dirname {} \\;")
+      local handle = io.popen("find " .. jdk_dir .. " -maxdepth 3 -type f -name javac -exec dirname {} \\; 2>/dev/null")
       if handle == nil then
         vim.notify("couldn't detect jdks", vim.log.levels.WARN)
         return {}
