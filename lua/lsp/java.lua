@@ -167,6 +167,10 @@ return {
         bufopts,
         "Extract method"
       )
+
+      -- Unit Test keybinds
+      utils.nnoremap("<leader>dt", jdtls.test_class, bufopts, "Test class")
+      utils.nnoremap("<leader>dT", jdtls.test_nearest_method, bufopts, "Test method")
     end
 
     local config = {
