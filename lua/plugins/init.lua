@@ -5,10 +5,14 @@ return {
       ensure_installed = {
         "rust_analyzer",
         "taplo",
+
         "tsserver",
+
         "jdtls",
         "java-debug",
         "java-test",
+
+        "clangd",
       },
       automatic_installation = true,
     },
@@ -22,7 +26,10 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    config = function() require("lsp/java").setup() end,
+    config = function()
+      require("lsp/java").setup()
+      require("lsp/clangd").setup()
+    end,
   },
   {
     "mfussenegger/nvim-jdtls",
