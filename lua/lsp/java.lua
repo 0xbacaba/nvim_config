@@ -1,3 +1,17 @@
+local function get_highest_jdk(all_jdks)
+  local max_version = 0
+  local max_version_index = -1
+  for i, jdk in ipairs(all_jdks) do
+    local version = tonumber(jdk.name:match "(%d+)")
+    if version ~= nil then
+      if version > max_version then
+        max_version = version
+        max_version_index = i
+      end
+    end
+  end
+  return all_jdks[max_version_index]
+end
 local function detect_jdks()
   local jdks = {}
   local uname = vim.fn.system("uname"):gsub("\n", "")
@@ -113,6 +127,7 @@ return {
     -- current project found using the root_marker as the folder for project specific data.
     local workspace_folder = xdg_data_home .. "/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
+    local detected_jdks = detect_jdks()
     local bundles = {}
 
     -- Include java-test bundle
@@ -222,7 +237,9 @@ return {
           -- And search for `interface RuntimeOption`
           -- The `name` is NOT arbitrary, but must match one of the elements from `enum ExecutionEnvironment` in the link above
           configuration = {
-            runtimes = detect_jdks(),
+            runtimes = {
+              get_highest_jdk(detected_jdks),
+            },
           },
         },
       },
