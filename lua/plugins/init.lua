@@ -27,8 +27,18 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      require("lsp/java").setup()
-      require("lsp/clangd").setup()
+      local lspconfig = require "lspconfig"
+      local mason_lspconfig = require "mason-lspconfig"
+
+      local utils = require "utils"
+      local default_config = { on_attach = utils.set_lsp_keybinds }
+
+      mason_lspconfig.setup_handlers {
+        function(server_name) lspconfig[server_name].setup(default_config) end,
+      }
+
+      require("lsp/java").setup(default_config)
+      require("lsp/clangd").setup(default_config)
     end,
   },
   {

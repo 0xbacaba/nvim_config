@@ -17,10 +17,10 @@ local function find_arduino_build_dir(project_dir)
 end
 
 return {
-  setup = function()
+  setup = function(default_config)
     local lspconfig = require "lspconfig"
 
-    local config = {
+    local config = vim.tbl_deep_extend("force", default_config, {
       cmd = { "clangd" },
       on_attach = function(client, bufnr)
         utils.set_lsp_keybinds(client, bufnr)
@@ -51,7 +51,7 @@ return {
       init_options = {
         cmopleteUnimported = true,
       },
-    }
+    })
 
     lspconfig.clangd.setup(config)
   end,

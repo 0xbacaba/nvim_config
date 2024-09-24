@@ -98,7 +98,7 @@ local function get_config()
 end
 
 return {
-  setup = function()
+  setup = function(default_config)
     local jdtls = require "jdtls"
     local lspconfig = require "lspconfig"
 
@@ -156,7 +156,7 @@ return {
       utils.nnoremap("<leader>dT", jdtls.test_nearest_method, bufopts, "Test method")
     end
 
-    local config = {
+    local config = vim.tbl_deep_extend("force", default_config, {
       flags = {
         debounce_text_changes = 80,
       },
@@ -263,7 +263,7 @@ return {
         "-data",
         workspace_folder,
       },
-    }
+    })
 
     -- Finally, start jdtls. This will run the language server using the configuration we specified,
     -- setup the keymappings, and attach the LSP client to the current buffer
