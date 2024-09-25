@@ -30,11 +30,10 @@ return {
             if flag:match "^%-%-compile%-commands%-dir=" then return end
           end
 
-          local buf_dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":h")
-          local build_dir = find_arduino_build_dir(buf_dir)
+          local build_dir = find_arduino_build_dir(client.config.root_dir)
           if build_dir == nil then
             vim.notify("no build directory found, try compiling first", vim.log.levels.WARN)
-            build_dir = buf_dir
+            build_dir = client.config.root_dir
             return
           end
           client.config.cmd = vim.list_extend(client.config.cmd, { "--compile-commands-dir=" .. build_dir })
