@@ -16,6 +16,26 @@ local function find_arduino_build_dir(project_dir)
   return nil
 end
 
+local function ask_to_compile(callback)
+  local args = vim.fn.input("", "arduino-cli compile")
+  local handle
+  handle = vim.uv.spawn("sh", {
+    args = { "-c", args },
+    stdio = { nil, vim.uv.new_pipe(false), vim.uv.new_pipe(false) },
+  }, function(code, _)
+    if handle ~= nil then handle:close() end
+
+    if code == 0 then
+      vim.schedule(function()
+        vim.notify("Compilation finished", vim.log.levels.INFO)
+        if callback ~= nil then callback() end
+      end)
+    else
+      vim.schedule(function() vim.notify("Compilation failed", vim.log.levels.ERROR) end)
+    end
+  end)
+end
+
 return {
   setup = function(default_config)
     local lspconfig = require "lspconfig"
@@ -23,16 +43,20 @@ return {
     local config = vim.tbl_deep_extend("force", default_config, {
       cmd = { "clangd" },
       on_attach = function(client, bufnr)
+        local bufopts = { noremap = true, silent = true, buffer = bufnr }
         utils.set_lsp_keybinds(client, bufnr)
 
         if is_arduino_project(client) then
+          utils.nnoremap("<leader>lc", ask_to_compile, bufopts, "compile")
           for _, flag in ipairs(client.config.cmd) do
             if flag:match "^%-%-compile%-commands%-dir=" then return end
           end
 
           local build_dir = find_arduino_build_dir(client.config.root_dir)
           if build_dir == nil then
-            vim.notify("no build directory found, try compiling first", vim.log.levels.WARN)
+            local should_compile = vim.fn.confirm("No build directory found. Compile now?", "&Yes\n&No", 2)
+            if should_compile then ask_to_compile(function() vim.cmd "LspRestart" end) end
+
             build_dir = client.config.root_dir
             return
           end
