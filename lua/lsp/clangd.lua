@@ -1,6 +1,9 @@
 local utils = require "utils"
 
-local function is_arduino_project(lspclient) return vim.fn.glob(lspclient.config.root_dir .. "/*.ino") ~= "" end
+local function is_arduino_project(lspclient)
+  if lspclient.config.root_dir == nil then return false end
+  return vim.fn.glob(lspclient.config.root_dir .. "/*.ino") ~= ""
+end
 local function find_arduino_build_dir(project_dir)
   local potential_dirs = vim.fn.split(vim.fn.glob(utils.get_temp_dir() .. "/arduino/sketches/*/"), "\n")
 
