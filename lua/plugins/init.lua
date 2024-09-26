@@ -52,10 +52,10 @@ return {
       require("lsp/clangd").setup(default_config)
     end,
   },
+  { "mfussenegger/nvim-jdtls" },
+  { "mfussenegger/nvim-dap" },
   {
-    "mfussenegger/nvim-jdtls",
-  },
-  {
-    "mfussenegger/nvim-dap",
+    "stevearc/overseer.nvim",
+    config = function() require("overseer").setup() end,
   },
 }

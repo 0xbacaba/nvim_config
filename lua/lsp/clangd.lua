@@ -53,9 +53,10 @@ return {
         args = { "--port", "${port}" },
       },
     }
-    dap.configurations.cpp = {
+    local conf = dap.configurations
+    conf.cpp = {
       {
-        name = "Launch file",
+        name = "default",
         type = "codelldb",
         request = "launch",
         program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
@@ -63,7 +64,7 @@ return {
         stopOnEntry = false,
       },
     }
-    dap.configurations.c = dap.configurations.cpp
+    conf.c = conf.cpp
 
     local config = vim.tbl_deep_extend("force", default_config, {
       cmd = { "clangd" },
