@@ -40,7 +40,6 @@ local function detect_jdks()
     for _, line in ipairs(lines) do
       local version, path = line:match "(%d+)[^/]*(/%S+/Contents/Home)"
       if version and path then
-        print("found jdk for version " .. version .. ": " .. path)
         table.insert(jdks, {
           name = "JavaSE-" .. version,
           path = path,
@@ -62,7 +61,6 @@ local function detect_jdks()
       for line in handle:lines() do
         local version = line:match "java%-(%d+)%-"
         local path = line:gsub("/bin$", "")
-        print("found jdk for version " .. version .. ": " .. path)
         table.insert(jdks, {
           name = "JavaSE-" .. version,
           path = path,
@@ -134,8 +132,6 @@ return {
     -- The on_attach function is used to set key maps after the language server
     -- attaches to the current buffer
     local on_attach = function(client, bufnr)
-      require("jdtls").setup_dap { hotcodereplace = "auto", config_overrides = {} }
-
       -- Regular Neovim LSP client keymappings
       utils.set_lsp_keybinds(client, bufnr)
 

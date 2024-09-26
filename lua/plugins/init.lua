@@ -23,6 +23,9 @@ return {
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
+    dependencies = {
+      "williamboman/mason-lspconfig.nvim",
+    },
     config = function()
       require("mason-nvim-dap").setup {
         ensure_installed = {
@@ -33,6 +36,9 @@ return {
         },
         automatic_installation = true,
       }
+
+      require("debug/codelldb").setup()
+      require("debug/jdtls").setup()
     end,
   },
   {
