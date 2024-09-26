@@ -156,12 +156,14 @@ return {
       utils.nnoremap("<leader>dT", jdtls.test_nearest_method, bufopts, "Test method")
     end
 
+    local unpack_func = table.unpack or unpack
+
     local config = vim.tbl_deep_extend("force", default_config, {
       flags = {
         debounce_text_changes = 80,
       },
       on_attach = on_attach, -- We pass our on_attach keybindings to the configuration map
-      root_dir = lspconfig.util.root_pattern(table.unpack and table.unpack(root_markers)), -- Set the root directory to our found root_marker
+      root_dir = lspconfig.util.root_pattern(unpack_func(root_markers)), -- Set the root directory to our found root_marker
       init_options = {
         bundles = bundles,
       },
