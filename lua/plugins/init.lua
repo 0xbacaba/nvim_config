@@ -1,21 +1,6 @@
 return {
   {
     "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "rust_analyzer",
-        "taplo",
-
-        "tsserver",
-
-        "jdtls",
-        "java-debug",
-        "java-test",
-
-        "clangd",
-      },
-      automatic_installation = true,
-    },
     config = function() require("mason").setup() end,
   },
   {
@@ -23,6 +8,32 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
     },
+    config = function()
+      require("mason-lspconfig").setup {
+        ensure_installed = {
+          "rust_analyzer",
+          "taplo",
+          "ts_ls",
+          "jdtls",
+          "clangd",
+        },
+        automatic_installation = true,
+      }
+    end,
+  },
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    config = function()
+      require("mason-nvim-dap").setup {
+        ensure_installed = {
+          "javadbg",
+          "javatest",
+
+          "codelldb",
+        },
+        automatic_installation = true,
+      }
+    end,
   },
   {
     "neovim/nvim-lspconfig",
