@@ -49,6 +49,11 @@ return {
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
         utils.set_lsp_keybinds(client, bufnr)
 
+        local neotest = require "neotest"
+        utils.nnoremap("<leader>dt", function() neotest.run.run(vim.fn.expand "%") end, bufopts, "Test File")
+        utils.nnoremap("<leader>dT", neotest.run.run, bufopts, "Test")
+        utils.nnoremap("<leader>dS", neotest.summary.toggle, bufopts, "Toggle Test Summary")
+
         if is_arduino_project(client) then
           utils.nnoremap("<leader>lc", ask_to_compile, bufopts, "compile")
           for _, flag in ipairs(client.config.cmd) do

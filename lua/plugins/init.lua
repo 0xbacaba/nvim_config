@@ -58,10 +58,37 @@ return {
       require("lsp/clangd").setup(default_config)
     end,
   },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    config = function()
+      require("nvim-treesitter.configs").setup {
+        ensure_installed = { "c", "cpp", "arduino", "lua", "java" },
+        sync_install = false,
+        auto_install = true,
+        modules = {},
+        ignore_install = {},
+      }
+    end,
+  },
   { "mfussenegger/nvim-jdtls" },
   { "mfussenegger/nvim-dap" },
   {
     "stevearc/overseer.nvim",
     config = function() require("overseer").setup() end,
+  },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "alfaix/neotest-gtest",
+    },
+    config = function()
+      require("neotest").setup {
+        adapters = {
+          require("neotest-gtest").setup {},
+        },
+      }
+    end,
   },
 }
