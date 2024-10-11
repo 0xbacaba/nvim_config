@@ -19,8 +19,12 @@ local function find_arduino_build_dir(project_dir)
   return nil
 end
 
-local function ask_to_compile(callback)
-  local args = vim.fn.input("", "arduino-cli compile")
+local function ask_to_compile(client, callback)
+  local root_dir = client.config.root_dir
+  local compile_command = "arduino-cli compile"
+  if vim.fn.findfile("Makefile", root_dir) ~= "" then compile_command = "make" end
+  local args = vim.fn.input("", compile_command)
+  if args == "" then return end
   local handle
   handle = vim.uv.spawn("sh", {
     args = { "-c", args },
@@ -55,7 +59,7 @@ return {
         utils.nnoremap("<leader>dS", neotest.summary.toggle, bufopts, "Toggle Test Summary")
 
         if is_arduino_project(client) then
-          utils.nnoremap("<leader>lc", ask_to_compile, bufopts, "compile")
+          utils.nnoremap("<leader>lc", function() ask_to_compile(client) end, bufopts, "compile")
           for _, flag in ipairs(client.config.cmd) do
             if flag:match "^%-%-compile%-commands%-dir=" then return end
           end
@@ -63,7 +67,7 @@ return {
           local build_dir = find_arduino_build_dir(client.config.root_dir)
           if build_dir == nil then
             local should_compile = vim.fn.confirm("No build directory found. Compile now?", "&Yes\n&No", 2)
-            if should_compile then ask_to_compile(function() vim.cmd "LspRestart" end) end
+            if should_compile then ask_to_compile(client, function() vim.cmd "LspRestart" end) end
 
             build_dir = client.config.root_dir
             return
