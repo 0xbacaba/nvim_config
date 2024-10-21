@@ -22,7 +22,7 @@ return {
       vim.api.nvim_create_autocmd("Filetype", {
         pattern = "markdown",
         callback = function(args)
-          local buftype = vim.api.nvim_buf_get_option(args.buf, "buftype")
+          local buftype = vim.bo[args.buf].buftype
           if buftype == "" then vim.cmd "MarkdownPreview" end
         end,
       })
