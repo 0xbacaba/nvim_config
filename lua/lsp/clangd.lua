@@ -77,11 +77,11 @@ return {
         end
       end,
       root_dir = lspconfig.util.root_pattern(
-        ".git", -- general
-        "CMakeLists.txt",
-
         "sketch.yaml", -- arduino-specific
-        "*.ino"
+        "*.ino",
+
+        ".git", -- general
+        "CMakeLists.txt"
       ),
       filetypes = { "c", "cpp", "arduino" },
       init_options = {
