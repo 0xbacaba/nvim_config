@@ -66,8 +66,8 @@ return {
 
           local build_dir = find_arduino_build_dir(client.config.root_dir)
           if build_dir == nil then
-            local should_compile = vim.fn.confirm("No build directory found. Compile now?", "&Yes\n&No", 2)
-            if should_compile then ask_to_compile(client, function() vim.cmd "LspRestart" end) end
+            local should_compile = vim.fn.confirm("No build directory found. Compile now?", "&Yes\n&No", 1)
+            if should_compile ~= 2 then ask_to_compile(client, function() vim.cmd "LspRestart" end) end
 
             build_dir = client.config.root_dir
             return
