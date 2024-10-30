@@ -18,6 +18,7 @@ return {
         flowchart_diagrams = {},
         disable_sync_scroll = 0,
       }
+      vim.g.mkdp_theme = "dark"
 
       vim.api.nvim_create_autocmd("Filetype", {
         pattern = "markdown",
