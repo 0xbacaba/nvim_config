@@ -11,11 +11,13 @@ return {
     config = function()
       require("mason-lspconfig").setup {
         ensure_installed = {
+          "lua_ls",
           "rust_analyzer",
           "taplo",
           "ts_ls",
           "jdtls",
           "clangd",
+          "texlab",
         },
         automatic_installation = true,
       }
@@ -56,6 +58,7 @@ return {
 
       require("lsp/java").setup(default_config)
       require("lsp/clangd").setup(default_config)
+      require("lsp/latex").setup(default_config)
     end,
   },
   {
@@ -66,7 +69,7 @@ return {
         sync_install = false,
         auto_install = true,
         modules = {},
-        ignore_install = {},
+        ignore_install = { "latex" },
       }
     end,
   },

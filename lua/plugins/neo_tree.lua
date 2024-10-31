@@ -3,10 +3,33 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     config = function()
       require("neo-tree").setup {
+        nesting_rules = {
+          ["tex"] = {
+            pattern = "(.*)%.tex$",
+            files = { "%1.aux", "%1.log", "%1.bib" },
+          },
+        },
         filesystem = {
           follow_current_file = true,
           group_empty_dirs = true,
+          window = {
+            mappings = {
+              ["O"] = "system_open",
+            },
+          },
           commands = {
+            system_open = function(state)
+              local node = state.tree:get_node()
+              local path = node:get_id()
+
+              local uname = vim.fn.system("uname"):gsub("\n", "")
+
+              if uname == "Darwin" then
+                vim.fn.jobstart({ "open", "-g", path }, { detach = true })
+              elseif uname == "Linux" then
+                vim.fn.jobstart({ "xdg-open", path }, { detach = true })
+              end
+            end,
             open = function(state)
               local fs = require "neo-tree.sources.filesystem"
               local fsc = require "neo-tree.sources.filesystem.commands"
