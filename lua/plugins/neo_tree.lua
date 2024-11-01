@@ -6,7 +6,7 @@ return {
         nesting_rules = {
           ["tex"] = {
             pattern = "(.*)%.tex$",
-            files = { "%1.aux", "%1.log", "%1.bib" },
+            files = { "%1.aux", "%1.log", "%1.bib", "%1.synctex.gz", "%1.fls", "%1.fdb_latexmk" },
           },
         },
         filesystem = {
