@@ -71,4 +71,26 @@ return {
     vim.notify("could not find nvim cache directory. Will default to " .. default, vim.log.levels.WARN)
   end,
   get_temp_dir = function() return os.getenv "TMPDIR" or os.getenv "TEMP" or os.getenv "TMP" or "/tmp" end,
+  get_flag_dir = function()
+    local dir = vim.fn.stdpath "data" .. "/custom_flags"
+    local stat = vim.loop.fs_stat(dir)
+    if stat and stat.type == "directory" then return dir end
+
+    vim.fn.mkdir(dir)
+    return dir
+  end,
+  ask_to_run = function(command, callback)
+    local cmd = vim.fn.input("Run command: ", command)
+    if cmd == "" then return end
+
+    local handle
+    handle = vim.uv.spawn("sh", {
+      args = { "-c", cmd },
+      stdio = { nil, vim.uv.new_pipe(false), vim.uv.new_pipe(false) },
+    }, function(code, _)
+      if handle ~= nil then handle:close() end
+
+      if callback ~= nil then vim.schedule(function() callback(code == 0) end) end
+    end)
+  end,
 }

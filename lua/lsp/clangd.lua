@@ -23,22 +23,13 @@ local function ask_to_compile(client, callback)
   local root_dir = client.config.root_dir
   local compile_command = "arduino-cli compile"
   if vim.fn.findfile("Makefile", root_dir) ~= "" then compile_command = "make" end
-  local args = vim.fn.input("", compile_command)
-  if args == "" then return end
-  local handle
-  handle = vim.uv.spawn("sh", {
-    args = { "-c", args },
-    stdio = { nil, vim.uv.new_pipe(false), vim.uv.new_pipe(false) },
-  }, function(code, _)
-    if handle ~= nil then handle:close() end
 
-    if code == 0 then
-      vim.schedule(function()
-        vim.notify("Compilation finished", vim.log.levels.INFO)
-        if callback ~= nil then callback() end
-      end)
+  utils.ask_to_run(compile_command, function(succeeded)
+    if succeeded then
+      vim.notify "Compilation successful"
+      if callback ~= nil then callback() end
     else
-      vim.schedule(function() vim.notify("Compilation failed", vim.log.levels.ERROR) end)
+      vim.notify("Compilation failed", vim.log.levels.ERROR)
     end
   end)
 end
