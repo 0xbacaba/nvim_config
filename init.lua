@@ -17,3 +17,8 @@ end
 
 require "lazy_setup"
 -- require "polish"
+
+vim.cmd [[
+  nm ö [
+  nm ä ]
+]]
