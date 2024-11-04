@@ -137,19 +137,14 @@ return {
 
       -- Java extensions provided by jdtls
       local bufopts = { noremap = true, silent = true, buffer = bufnr }
-      utils.nnoremap("<leader>lo", jdtls.organize_imports, bufopts, "Organize imports")
-      utils.nnoremap("<leader>lev", jdtls.extract_variable, bufopts, "Extract variable")
-      utils.nnoremap("<leader>lec", jdtls.extract_constant, bufopts, "Extract constant")
-      utils.vnoremap(
-        "<leader>em",
-        [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]],
-        bufopts,
-        "Extract method"
-      )
+      utils.nmap("<leader>lo", jdtls.organize_imports, bufopts, "Organize imports")
+      utils.nmap("<leader>lev", jdtls.extract_variable, bufopts, "Extract variable")
+      utils.nmap("<leader>lec", jdtls.extract_constant, bufopts, "Extract constant")
+      utils.vmap("<leader>em", [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]], bufopts, "Extract method")
 
       -- Unit Test keybinds
-      utils.nnoremap("<leader>dt", jdtls.test_class, bufopts, "Test class")
-      utils.nnoremap("<leader>dT", jdtls.test_nearest_method, bufopts, "Test method")
+      utils.nmap("<leader>dt", jdtls.test_class, bufopts, "Test class")
+      utils.nmap("<leader>dT", jdtls.test_nearest_method, bufopts, "Test method")
     end
 
     local unpack_func = table.unpack or unpack

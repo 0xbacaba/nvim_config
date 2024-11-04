@@ -45,12 +45,12 @@ return {
         utils.set_lsp_keybinds(client, bufnr)
 
         local neotest = require "neotest"
-        utils.nnoremap("<leader>dt", function() neotest.run.run(vim.fn.expand "%") end, bufopts, "Test File")
-        utils.nnoremap("<leader>dT", neotest.run.run, bufopts, "Test")
-        utils.nnoremap("<leader>dS", neotest.summary.toggle, bufopts, "Toggle Test Summary")
+        utils.nmap("<leader>dt", function() neotest.run.run(vim.fn.expand "%") end, bufopts, "Test File")
+        utils.nmap("<leader>dT", neotest.run.run, bufopts, "Test")
+        utils.nmap("<leader>dS", neotest.summary.toggle, bufopts, "Toggle Test Summary")
 
         if is_arduino_project(client) then
-          utils.nnoremap("<leader>lc", function() ask_to_compile(client) end, bufopts, "compile")
+          utils.nmap("<leader>lc", function() ask_to_compile(client) end, bufopts, "compile")
           for _, flag in ipairs(client.config.cmd) do
             if flag:match "^%-%-compile%-commands%-dir=" then return end
           end
