@@ -164,6 +164,15 @@ return {
       -- for a list of options
       settings = {
         java = {
+          references = {
+            includeDecompiledSources = true,
+          },
+          eclipse = {
+            downloadSources = true,
+          },
+          maven = {
+            downloadSources = true,
+          },
           format = {
             settings = {
               -- Use Google Java style guidelines for formatting
