@@ -2,7 +2,7 @@ local function get_forwardsearch_config()
   local uname = vim.fn.system("uname"):gsub("\n", "")
   if uname == "Darwin" then
     -- Only Skim is supported on macOS
-    local skim_executable = "/lpplications/Skim.app/Contents/SharedSupport/displayline"
+    local skim_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
     if vim.fn.executable(skim_executable) == 1 then
       return {
         executable = skim_executable,
