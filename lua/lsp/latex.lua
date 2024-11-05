@@ -23,6 +23,17 @@ local function get_forwardsearch_config()
   end
   return {}
 end
+local function texlab_forward_search()
+  -- Get the current buffer and cursor position
+  local params = {
+    textDocument = vim.lsp.util.make_text_document_params(),
+    position = { line = vim.fn.line "." - 1, character = vim.fn.col "." - 1 },
+  }
+  -- Send the `texlab/forwardSearch` request
+  vim.lsp.buf_request(0, "textDocument/forwardSearch", params, function(err)
+    if err then vim.notify("Texlab forward search failed: " .. err.message, vim.log.levels.ERROR) end
+  end)
+end
 
 local function check_skim()
   local skim_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
@@ -49,9 +60,21 @@ end
 return {
   setup = function(default_config)
     local config = vim.tbl_deep_extend("force", default_config, {
-      on_attach = function()
+      on_attach = function(_, bufnr)
         local uname = vim.fn.system("uname"):gsub("\n", "")
         if uname == "Darwin" then check_skim() end
+
+        -- setup keybinds
+        local utils = require "utils"
+        utils.set_lsp_keybinds(nil, bufnr)
+        utils.set_keybinds({
+          {
+            "Show in viewer",
+            "<leader>lj",
+            utils.mapmode.normal,
+            texlab_forward_search,
+          },
+        }, bufnr)
       end,
       settings = {
         texlab = {

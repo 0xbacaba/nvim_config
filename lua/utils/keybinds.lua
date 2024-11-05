@@ -97,6 +97,7 @@ local definitions = {
 }
 
 return {
+  mapmode = mode,
   map = function(mapmode, lhs, rhs, bufopts, desc)
     if lhs == nil or rhs == nil then
       vim.notify("tried to map nil value " .. tostring(lhs) .. " -> " .. tostring(rhs), vim.log.levels.WARN)
