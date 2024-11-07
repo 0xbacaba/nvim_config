@@ -22,3 +22,5 @@ vim.cmd [[
   nm ö [
   nm ä ]
 ]]
+
+require("utils.color").apply_color_overrides()
