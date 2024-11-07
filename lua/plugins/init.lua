@@ -9,16 +9,18 @@ return {
       "williamboman/mason.nvim",
     },
     config = function()
+      local ensure_installed = {
+        "lua_ls",
+        "rust_analyzer",
+        "taplo",
+        "jdtls",
+        "clangd",
+        "texlab",
+      }
+      if vim.fn.executable "npm" == 1 then table.insert(ensure_installed, "ts_ls") end
+
       require("mason-lspconfig").setup {
-        ensure_installed = {
-          "lua_ls",
-          "rust_analyzer",
-          "taplo",
-          "ts_ls",
-          "jdtls",
-          "clangd",
-          "texlab",
-        },
+        ensure_installed = ensure_installed,
         automatic_installation = true,
       }
     end,
