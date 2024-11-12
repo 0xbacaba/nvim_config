@@ -12,14 +12,14 @@ local function get_forwardsearch_config()
   elseif uname == "Linux" then
     local viewer = vim.fn.system("xdg-mime query default application/pdf"):gsub("\n", "")
 
-    if viewer == "okular.desktop" then
+    if string.find(viewer, "okular") then
       return {
         executable = "okular",
         args = { "--unique", "file:%p#src:%l%f" },
       }
     end
 
-    print "Unsupported pdf viewer for synctex"
+    print("Unsupported pdf viewer for synctex: " .. viewer)
   end
   return {}
 end
