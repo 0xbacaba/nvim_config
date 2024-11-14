@@ -11,6 +11,10 @@ Currently configured LSPs for:
 
 - arduino [\[clangd\]](https://clangd.llvm.org)
 
+- python [\[pylsp\]](https://github.com/python-lsp/python-lsp-server)
+  - [nvim-dap-python](https://github.com/mfussenegger/nvim-dap-python) for debugging
+
+
 - latex [\[texlab\]](https://github.com/latex-lsp/texlab) \
   Configured pdf-viewers:
   <details> 
