@@ -16,6 +16,7 @@ return {
         "jdtls",
         "clangd",
         "texlab",
+        "pylsp",
       }
       if vim.fn.executable "npm" == 1 then table.insert(ensure_installed, "ts_ls") end
 
@@ -37,12 +38,15 @@ return {
           "javatest",
 
           "codelldb",
+
+          "debugpy",
         },
         automatic_installation = true,
       }
 
       require("debug/codelldb").setup()
       require("debug/jdtls").setup()
+      require("debug/debugpy").setup()
     end,
   },
   {
@@ -61,6 +65,7 @@ return {
       require("lsp/java").setup(default_config)
       require("lsp/clangd").setup(default_config)
       require("lsp/latex").setup(default_config)
+      require("lsp/python").setup(default_config)
     end,
   },
   {
@@ -77,6 +82,7 @@ return {
   },
   { "mfussenegger/nvim-jdtls" },
   { "mfussenegger/nvim-dap" },
+  { "mfussenegger/nvim-dap-python" },
   {
     "stevearc/overseer.nvim",
     config = function() require("overseer").setup() end,
