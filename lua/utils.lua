@@ -23,6 +23,25 @@ M = vim.tbl_deep_extend("force", keybinds, data, color, {
       if callback ~= nil then callback(code == 0) end
     end)
   end,
+  deep_tostring = function(obj, indent)
+    indent = indent or 0
+    local prefix = string.rep("  ", indent)
+    local result = ""
+
+    if type(obj) == "table" then
+      result = result .. prefix .. "{\n"
+      for key, value in pairs(obj) do
+        local keyStr = tostring(key)
+        result = result .. prefix .. "  [" .. keyStr .. "] = "
+        result = result .. M.deep_tostring(value, indent + 1)
+      end
+      result = result .. prefix .. "}\n"
+    else
+      result = result .. prefix .. tostring(obj) .. "\n"
+    end
+
+    return result
+  end,
 })
 
 return M
