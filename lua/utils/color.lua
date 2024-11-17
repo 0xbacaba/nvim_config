@@ -1,6 +1,6 @@
 local highlight_overrides = {
-  { name = "Comment", value = { fg = "#b9b9b9" } },
-  { name = "SpecialComment", value = { fg = "#9b9b9b" } },
+  { name = "Comment", value = { fg = "#0077aa" } },
+  { name = "SpecialComment", value = { fg = "#0066bb" } },
 }
 
 return {
