@@ -35,7 +35,9 @@ M = {
     local utils = require "utils"
     local pylsp_python = pylsp_install .. "/venv/bin/python3"
 
-    utils.ask_to_run(pylsp_python .. " -m pip install ", function(install_success)
+    local command = pylsp_python .. " -m pip install "
+    if package ~= nil then command = command .. package end
+    utils.ask_to_run(command, function(install_success)
       if install_success then
         vim.notify "Installation successful"
         return
