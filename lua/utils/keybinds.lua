@@ -94,6 +94,32 @@ local definitions = {
       vim.lsp.buf.code_action,
     },
   },
+  global = {
+    {
+      "Resize split left",
+      "<S-Left>",
+      mode.normal,
+      function() require("smart-splits").resize_left() end,
+    },
+    {
+      "Resize split right",
+      "<S-Right>",
+      mode.normal,
+      function() require("smart-splits").resize_right() end,
+    },
+    {
+      "Resize split up",
+      "<S-UP>",
+      mode.normal,
+      function() require("smart-splits").resize_up() end,
+    },
+    {
+      "Resize split down",
+      "<S-Down>",
+      mode.normal,
+      function() require("smart-splits").resize_down() end,
+    },
+  },
 }
 
 return {
@@ -124,4 +150,5 @@ return {
     end
   end,
   set_lsp_keybinds = function(_, bufnr) require("utils").set_keybinds(definitions.lsp, bufnr) end,
+  set_global_keybinds = function(_, bufnr) require("utils").set_keybinds(definitions.global, bufnr) end,
 }
