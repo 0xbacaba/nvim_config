@@ -96,6 +96,16 @@ return {
         add_command_override(cmd)
       end
 
+      vim.api.nvim_create_user_command("InstantShare", function(args)
+        local address = args.fargs[1]
+        local port = args.fargs[2]
+
+        if address == nil then address = "0.0.0.0" end
+        if port == nil then port = 8080 end
+
+        vim.cmd("InstantStartServer " .. address .. " " .. port)
+        vim.cmd("InstantStartSession 127.0.0.1 " .. port)
+      end, { nargs = "*" })
       vim.api.nvim_create_user_command("InstantSetUsername", function(args)
         local name = args.fargs[1]
         if not is_valid(name) then
