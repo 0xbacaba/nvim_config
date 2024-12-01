@@ -1,6 +1,7 @@
+local utils = require "utils"
 local function get_forwardsearch_config()
-  local uname = vim.fn.system("uname"):gsub("\n", "")
-  if uname == "Darwin" then
+  local uname = utils.get_uname()
+  if uname == utils.OS.macos then
     -- Only Skim is supported on macOS
     local skim_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
     if vim.fn.executable(skim_executable) == 1 then
@@ -9,7 +10,7 @@ local function get_forwardsearch_config()
         args = { "-r", "-g", "%l", "%p", "%f" },
       }
     end
-  elseif uname == "Linux" then
+  elseif uname == utils.OS.linux then
     local viewer = vim.fn.system("xdg-mime query default application/pdf"):gsub("\n", "")
 
     if string.find(viewer, "okular") then
@@ -39,7 +40,6 @@ local function check_skim()
   local skim_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
 
   if vim.fn.executable(skim_executable) == 0 then
-    local utils = require "utils"
     local flag_file = utils.get_flag_dir() .. "/skim_install"
     if vim.fn.filereadable(flag_file) ~= 1 then
       vim.fn.writefile({}, flag_file)
@@ -61,11 +61,10 @@ return {
   setup = function(default_config)
     local config = vim.tbl_deep_extend("force", default_config, {
       on_attach = function(_, bufnr)
-        local uname = vim.fn.system("uname"):gsub("\n", "")
-        if uname == "Darwin" then check_skim() end
+        local uname = utils.get_uname()
+        if uname == utils.OS.macos then check_skim() end
 
         -- setup keybinds
-        local utils = require "utils"
         utils.set_lsp_keybinds(nil, bufnr)
         utils.set_keybinds({
           {

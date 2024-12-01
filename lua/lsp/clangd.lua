@@ -5,12 +5,12 @@ local function is_arduino_project(lspclient)
   return vim.fn.glob(lspclient.config.root_dir .. "/*.ino") ~= ""
 end
 local function get_arduino_build_dir()
-  local uname = vim.fn.system("uname"):gsub("%s+", "")
+  local uname = utils.get_uname()
   local home = os.getenv "HOME"
 
-  if uname == "Linux" then
+  if uname == utils.OS.linux then
     return utils.get_temp_dir() .. "/arduino/sketches"
-  elseif uname == "Darwin" then
+  elseif uname == utils.OS.macos then
     return home .. "/Library/Caches/arduino/sketches"
   end
 

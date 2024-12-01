@@ -1,3 +1,4 @@
+local utils = require "utils"
 local function get_highest_jdk(all_jdks)
   local max_version = 0
   local max_version_index = -1
@@ -14,10 +15,10 @@ local function get_highest_jdk(all_jdks)
 end
 local function detect_jdks()
   local jdks = {}
-  local uname = vim.fn.system("uname"):gsub("\n", "")
+  local uname = utils.get_uname()
 
   -- macOS: use /usr/libexec/java_home to detect installed JDKs
-  if uname == "Darwin" then
+  if uname == utils.OS.macos then
     local handle = io.popen "/usr/libexec/java_home -V 2>&1"
     if handle == nil then
       vim.notify("couldn't detect jdks", vim.log.levels.WARN)
@@ -48,7 +49,7 @@ local function detect_jdks()
     end
 
     -- Linux: scan common JDK install paths
-  elseif uname == "Linux" then
+  elseif uname == utils.OS.linux then
     local jdk_paths = { "/usr/lib/jvm", "/usr/java" }
 
     for _, jdk_dir in ipairs(jdk_paths) do
@@ -73,20 +74,19 @@ local function detect_jdks()
   return jdks
 end
 
-local utils = require "utils"
 local nvim_data = utils.find_nvim_data()
 local nvim_cache = utils.find_nvim_cache()
 local nvim_lsp_cache = nvim_cache .. "/lsp"
 
 local function get_config()
   local common = nvim_data .. "/mason/packages/jdtls/config_"
-  local uname = vim.fn.system("uname"):gsub("\n", "")
-  local arch = vim.fn.system("uname -m"):gsub("\n", "")
+  local uname = utils.get_uname()
+  local arch = utils.get_architecture()
 
   local os
-  if uname == "Linux" then
+  if uname == utils.OS.linux then
     os = common .. "linux"
-  elseif uname == "Darwin" then
+  elseif uname == utils.OS.macos then
     os = common .. "mac"
   end
 

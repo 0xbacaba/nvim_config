@@ -32,11 +32,12 @@ return {
               local node = state.tree:get_node()
               local path = node:get_id()
 
-              local uname = vim.fn.system("uname"):gsub("\n", "")
+              local utils = require "utils"
+              local uname = utils.get_uname()
 
-              if uname == "Darwin" then
+              if uname == utils.OS.macos then
                 vim.fn.jobstart({ "open", "-g", path }, { detach = true })
-              elseif uname == "Linux" then
+              elseif uname == utils.OS.linux then
                 vim.fn.jobstart({ "xdg-open", path }, { detach = true })
               end
             end,

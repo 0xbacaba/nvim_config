@@ -1,9 +1,10 @@
 local keybinds = require "utils.keybinds"
 local data = require "utils.data"
 local color = require "utils.color"
+local os = require "utils.os"
 
 local M
-M = vim.tbl_deep_extend("force", keybinds, data, color, {
+M = vim.tbl_deep_extend("force", keybinds, data, color, os, {
   run = function(command, args, callback)
     local handle
     handle = vim.uv.spawn(command, {
