@@ -9,12 +9,11 @@ local function get_arduino_build_dir()
   local home = os.getenv "HOME"
 
   if uname == utils.OS.linux then
-    return utils.get_temp_dir() .. "/arduino/sketches"
+    return utils.xdg_cache_home .. "/arduino/sketches"
   elseif uname == utils.OS.macos then
     return home .. "/Library/Caches/arduino/sketches"
   end
 
-  vim.notify("This config is not designed for this OS: " .. uname, vim.log.levels.WARN)
   return ""
 end
 local function find_arduino_project_build_dir(project_dir)
