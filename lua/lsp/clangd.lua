@@ -4,8 +4,21 @@ local function is_arduino_project(lspclient)
   if lspclient.config.root_dir == nil then return false end
   return vim.fn.glob(lspclient.config.root_dir .. "/*.ino") ~= ""
 end
-local function find_arduino_build_dir(project_dir)
-  local potential_dirs = vim.fn.split(vim.fn.glob(utils.get_temp_dir() .. "/arduino/sketches/*/"), "\n")
+local function get_arduino_build_dir()
+  local uname = vim.fn.system("uname"):gsub("%s+", "")
+  local home = os.getenv "HOME"
+
+  if uname == "Linux" then
+    return utils.get_temp_dir() .. "/arduino/sketches"
+  elseif uname == "Darwin" then
+    return home .. "/Library/Caches/arduino/sketches"
+  end
+
+  vim.notify("This config is not designed for this OS: " .. uname, vim.log.levels.WARN)
+  return ""
+end
+local function find_arduino_project_build_dir(project_dir)
+  local potential_dirs = vim.fn.split(vim.fn.glob(get_arduino_build_dir() .. "/*/"), "\n")
 
   for _, dir in ipairs(potential_dirs) do
     local file = io.open(dir .. "/build.options.json", "r")
@@ -55,7 +68,7 @@ return {
             if flag:match "^%-%-compile%-commands%-dir=" then return end
           end
 
-          local build_dir = find_arduino_build_dir(client.config.root_dir)
+          local build_dir = find_arduino_project_build_dir(client.config.root_dir)
           if build_dir == nil then
             local should_compile = vim.fn.confirm("No build directory found. Compile now?", "&Yes\n&No", 1)
             if should_compile ~= 2 then ask_to_compile(client, function() vim.cmd "LspRestart" end) end
