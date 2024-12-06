@@ -25,3 +25,4 @@ vim.cmd [[
 
 require("utils.color").apply_color_overrides()
 require("utils.keybinds").set_global_keybinds()
+require("utils.pyvenv").setup_pyvenv()

@@ -12,7 +12,7 @@ M = {
             "Install package with pip",
             "<leader>lp",
             utils.mapmode.normal,
-            M.pip_install,
+            utils.ask_pip_install,
           },
         }, bufnr)
       end,
@@ -26,25 +26,13 @@ M = {
           },
         },
       },
+      cmd = {
+        require("utils.pyvenv").get_pyvenv() .. "/bin/pylsp",
+      },
     })
 
+    require("utils.pyvenv").pip_install_needed "python-lsp-server"
     require("lspconfig").pylsp.setup(config)
-  end,
-  pip_install = function(package)
-    local pylsp_install = require("mason-registry").get_package("python-lsp-server"):get_install_path()
-    local utils = require "utils"
-    local pylsp_python = pylsp_install .. "/venv/bin/python3"
-
-    local command = pylsp_python .. " -m pip install "
-    if package ~= nil then command = command .. package end
-    utils.ask_to_run(command, function(install_success)
-      if install_success then
-        vim.notify "Installation successful"
-        return
-      end
-
-      vim.notify("Installation failed", vim.log.levels.ERROR)
-    end)
   end,
 }
 
