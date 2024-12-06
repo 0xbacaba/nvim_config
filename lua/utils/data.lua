@@ -40,9 +40,9 @@ return {
   get_temp_dir = function() return os.getenv "TMPDIR" or os.getenv "TEMP" or os.getenv "TMP" or "/tmp" end,
   get_flag_dir = function()
     local dir = vim.fn.stdpath "data" .. "/custom_flags"
-    if vim.fn.isdirectory(dir) then return dir end
+    if vim.fn.isdirectory(dir) == 1 then return dir end
 
-    vim.fn.mkdir(dir)
+    vim.fn.mkdir(dir, "p")
     return dir
   end,
 }
