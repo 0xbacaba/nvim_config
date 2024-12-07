@@ -3,9 +3,10 @@ local data = require "utils.data"
 local color = require "utils.color"
 local os = require "utils.os"
 local pyvenv = require "utils.pyvenv"
+local user_input = require "utils.user_input"
 
 local M
-M = vim.tbl_deep_extend("force", keybinds, data, color, os, pyvenv, {
+M = vim.tbl_deep_extend("force", keybinds, data, color, os, pyvenv, user_input, {
   run = function(command, args, callback)
     local handle
     handle = vim.uv.spawn(command, {
