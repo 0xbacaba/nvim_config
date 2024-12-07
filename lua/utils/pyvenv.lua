@@ -38,7 +38,7 @@ M = {
     end)
   end,
 
-  ---@return string
+  ---@return string|nil
   get_pyvenv = function()
     local pyvenv = pyvenv_dir()
     if vim.fn.isdirectory(pyvenv) == 0 or vim.fn.executable(pyvenv .. "/bin/python3") == 0 then M.setup_pyvenv() end
@@ -65,8 +65,22 @@ M = {
     end)
   end,
 
-  ---@param package string
+  ---@param package string|table
   pip_install_needed = function(package)
+    if type(package) == "table" then
+      for _, v in ipairs(package) do
+        M.pip_install_needed(v)
+      end
+      return
+    end
+    if type(package) ~= "string" then
+      vim.notify(
+        "`package` must be a string, got:" .. type(package) .. " " .. require("utils").deep_tostring(package),
+        vim.log.levels.ERROR
+      )
+      return
+    end
+
     local venv = M.get_pyvenv()
     if venv == nil then return end
 
