@@ -15,6 +15,17 @@ return {
     local dap = require "dap"
     local configs = dap.configurations
 
+    local rename_map = {
+      ["file"] = "Launch file",
+      ["file:args"] = "Launch file with arguments",
+      ["attach"] = "Attach remote",
+      ["file:doctest"] = "Run doctests in file",
+    }
+    for _, config in ipairs(configs.python) do
+      local rename = rename_map[config.name]
+      if rename ~= nil then config.name = rename end
+    end
+
     -- Replace "Attach remote" python debug configuration
     local remote_index = -1
     for i, config in ipairs(configs.python) do
