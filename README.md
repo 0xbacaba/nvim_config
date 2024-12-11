@@ -43,3 +43,13 @@ Currently configured LSPs for:
 
     Shift+⌘+Click to run inverse search
   </details>
+
+---
+
+Image support:
+
+- Implemented using [image.nvim](https://github.com/3rd/image.nvim)
+
+- Use `:ConfigureImageBackend` to set it up
+
+- Currently only tested with the [kitty](https://sw.kovidgoyal.net/kitty/graphics-protocol/) protocol, [ueberzugpp](https://github.com/jstkdng/ueberzugpp) would also need to be installed manually
