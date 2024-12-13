@@ -31,7 +31,7 @@ M = {
       },
     })
 
-    require("utils.pyvenv").pip_install_needed "python-lsp-server"
+    require("utils.pyvenv").pip_install_needed "python-lsp-server[all]"
     require("lspconfig").pylsp.setup(config)
   end,
 }

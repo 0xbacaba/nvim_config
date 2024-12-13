@@ -87,19 +87,11 @@ M = {
     local python = venv .. "/bin/python3"
 
     local utils = require "utils"
-    utils.run(python, { "-m", "pip", "show", package }, function(version_check_code)
-      if version_check_code == 0 then return end
 
-      vim.notify("Installing " .. package)
+    utils.run(python, { "-m", "pip", "install", package }, function(code)
+      if code == 0 then return end
 
-      utils.run(python, { "-m", "pip", "install", package }, function(code)
-        if code == 0 then
-          vim.schedule(function() vim.notify(package .. " installation successful") end)
-          return
-        end
-
-        vim.schedule(function() vim.notify(package .. " installation failed: " .. code, vim.log.levels.WARN) end)
-      end)
+      vim.schedule(function() vim.notify(package .. " installation failed: " .. code, vim.log.levels.WARN) end)
     end)
   end,
 }
