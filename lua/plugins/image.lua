@@ -75,23 +75,24 @@ return {
         processor = "magick_rock",
         integrations = {
           markdown = {
-            enabled = true, -- Enable image rendering in markdown files
+            enabled = true,
             sizing_strategy = "auto", -- Options: "auto", "height", "width"
-            download_remote_images = true, -- Automatically download remote images
-            clear_in_insert_mode = true, -- Clear images while in insert mode
+            download_remote_images = true,
+            clear_in_insert_mode = true,
+            only_render_image_at_cursor = true,
           },
         },
         log_level = "warn", -- Log level for diagnostics: "error", "warn", "info", "debug"
-        disable_mouse_events = false, -- Disable mouse events for images
-        max_width = 120,
-        max_height = 12,
+        disable_mouse_events = false,
+        max_width = math.huge,
+        max_height = math.huge,
         max_width_window_percentage = math.huge,
         max_height_window_percentage = math.huge,
         window_overlap_clear_enabled = false,
         window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
         editor_only_render_when_focused = false,
         tmux_show_only_in_active_window = false,
-        hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" },
+        hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif", "*.pdf" },
       }
     end,
   },
