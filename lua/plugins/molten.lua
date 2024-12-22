@@ -35,6 +35,7 @@ return {
       local utils = require "utils.pyvenv"
       utils.pip_install_needed { "pynvim", "jupyter_client", "nbformat" }
 
+      require("which-key").add { "<leader>m", group = "molten" }
       keybind_util.set_keybinds(keybinds)
     end,
   },
@@ -84,6 +85,8 @@ return {
         v[4] = runner_map[v[1]]
         if v[4] ~= nil then table.insert(quarto_keybinds, v) end
       end
+
+      require("which-key").add { "<leader>m", group = "molten" }
       keybind_util.set_keybinds(quarto_keybinds)
     end,
   },
