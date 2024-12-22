@@ -35,7 +35,7 @@ return {
       local utils = require "utils.pyvenv"
       utils.pip_install_needed { "pynvim", "jupyter_client", "nbformat" }
 
-      require("which-key").add { "<leader>m", group = "molten", mode = { "n", "v" } }
+      require("which-key").add { "<leader>m", group = " molten", mode = { "n", "v" } }
       keybind_util.set_keybinds(keybinds)
     end,
   },
