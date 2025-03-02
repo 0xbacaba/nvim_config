@@ -285,6 +285,9 @@ return {
             onSave = true,
           },
           forwardSearch = get_forwardsearch_config(),
+          diagnostics = {
+            ignoredPatterns = { "Unused label" },
+          },
         },
       },
     })
