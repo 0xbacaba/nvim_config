@@ -43,7 +43,7 @@ return {
       ),
       filetypes = { "c", "cpp", "arduino" },
       init_options = {
-        cmopleteUnimported = true,
+        completeUnimported = true,
       },
     })
 
