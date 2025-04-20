@@ -23,5 +23,6 @@ return {
       },
     }
     conf.c = conf.cpp
+    conf.arduino = conf.cpp
   end,
 }
