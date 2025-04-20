@@ -16,6 +16,10 @@ return {
         utils.nmap("<leader>dT", neotest.run.run, bufopts, "Test")
         utils.nmap("<leader>dS", neotest.summary.toggle, bufopts, "Toggle Test Summary")
 
+        -- use compile_commands in project directory if available
+        if vim.fn.filereadable(client.config.root_dir .. "/compile_commands.json") then
+          vim.list_extend(client.config.cmd, { "--compile-commands-dir=" .. client.config.root_dir })
+        end
         if arduino.is_arduino_project(client) then
           utils.nmap("<leader>lc", function() arduino.ask_to_compile(client) end, bufopts, "compile")
           for _, flag in ipairs(client.config.cmd) do
