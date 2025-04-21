@@ -16,15 +16,26 @@ return {
         utils.nmap("<leader>dT", neotest.run.run, bufopts, "Test")
         utils.nmap("<leader>dS", neotest.summary.toggle, bufopts, "Toggle Test Summary")
 
+        ---@param list table<string>
+        ---@param pattern string
+        local listHas = function(list, pattern)
+          for _, flag in ipairs(list) do
+            if flag:match(pattern) then return true end
+          end
+          return false
+        end
+
         -- use compile_commands in project directory if available
-        if vim.fn.filereadable(client.config.root_dir .. "/compile_commands.json") then
+        local compile_commands = client.config.root_dir .. "/compile_commands.json"
+        if
+          vim.fn.filereadable(compile_commands) == 1 and not listHas(client.config.cmd, "^%-%-compile%-commands%-dir=")
+        then
           vim.list_extend(client.config.cmd, { "--compile-commands-dir=" .. client.config.root_dir })
         end
+
         if arduino.is_arduino_project(client) then
           utils.nmap("<leader>lc", function() arduino.ask_to_compile(client) end, bufopts, "compile")
-          for _, flag in ipairs(client.config.cmd) do
-            if flag:match "^%-%-compile%-commands%-dir=" then return end
-          end
+          if listHas(client.config.cmd, "^%-%-compile%-commands%-dir=") then return end
 
           local build_dir = arduino.find_project_build_dir(client.config.root_dir)
           if build_dir == nil then
