@@ -128,21 +128,21 @@ local function use_compiler(client, compiler, file)
       vim.fn.writefile({ file .. "=" .. compiler }, last_compilers_flag_file, "a")
     end
   end
-  if compiler == nil then
+  if compiler == nil or compiler == "" then
     vim.notify("Compiler cannot be nil", vim.log.levels.ERROR)
     return
   end
 
-  if client.config.settings.texlab.build.command ~= compiler then
+  if client.config.settings.texlab.build.executable ~= compiler then
     print("compiler changed to " .. compiler)
-    client.config.settings.texlab.build.command = compiler
+    client.config.settings.texlab.build.executable = compiler
     vim.cmd "LspRestart"
   end
 end
 --- Get the currently set compiler of a specific client
 ---@param client vim.lsp.Client
 ---@return string
-local function get_compiler(client) return client.config.settings.texlab.build.command end
+local function get_compiler(client) return client.config.settings.texlab.build.executable end
 
 --- Find compilers specified at the beginning of the specified files
 ---@param files table<string>
@@ -280,7 +280,7 @@ return {
         texlab = {
           build = {
             args = { "-synctex=1", "%f" },
-            command = "pdflatex",
+            executable = "pdflatex",
             forwardSearchAfter = true,
             onSave = true,
           },
