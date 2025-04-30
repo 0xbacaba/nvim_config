@@ -286,7 +286,7 @@ return {
           },
           forwardSearch = get_forwardsearch_config(),
           diagnostics = {
-            ignoredPatterns = { "Unused label" },
+            ignoredPatterns = { "Unused label", "Underfull \\\\hbox", "Overfull \\\\hbox" },
           },
         },
       },
