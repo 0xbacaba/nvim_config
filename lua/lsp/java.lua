@@ -102,7 +102,7 @@ return {
 
     -- File types that signify a Java project's root directory. This will be
     -- used by eclipse to determine what constitutes a workspace
-    local root_markers = { "gradlew", "mvnw", ".git", "pom.xml", ".classpath" }
+    local root_markers = { "pom.xml", "gradlew", "mvnw", ".git", ".classpath" }
     local root_dir = require("jdtls.setup").find_root(root_markers)
 
     -- eclipse.jdt.ls stores project specific data within a folder. If you are working
