@@ -117,12 +117,13 @@ return {
     -- Include java-test bundle
     local java_test_path = require("mason-registry").get_package("java-test"):get_install_path()
     local java_test_bundle = vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar"), "\n")
+    if #java_test_bundle > 0 then vim.list_extend(bundles, java_test_bundle) end
 
     -- Include java-debug-adapter bundle
     local java_debug_path = require("mason-registry").get_package("java-debug-adapter"):get_install_path()
     local java_debug_bundle =
       vim.split(vim.fn.glob(java_debug_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar"), "\n")
-    if java_debug_bundle[1] ~= "" then vim.list_extend(bundles, java_debug_bundle) end
+    if #java_debug_bundle > 0 then vim.list_extend(bundles, java_debug_bundle) end
 
     local jdtls_install = require("mason-registry").get_package("jdtls"):get_install_path()
 
