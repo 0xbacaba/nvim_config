@@ -11,6 +11,18 @@ return {
         args = { "--port", "${port}" },
       },
     }
+
+    local cwdLogical = vim.fn.trim(vim.fn.system { "pwd", "-L" })
+    local cwdPhysical = vim.fn.trim(vim.fn.system { "pwd", "-P" })
+
+    local sourceMapping = {}
+    if cwdLogical ~= cwdPhysical then
+      sourceMapping = vim.tbl_extend("force", sourceMapping, {
+        [cwdLogical] = cwdPhysical,
+        [cwdPhysical] = cwdLogical,
+      })
+    end
+
     local conf = dap.configurations
     conf.cpp = {
       {
@@ -20,6 +32,7 @@ return {
         program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
         cwd = "${workspaceFolder}",
         stopOnEntry = false,
+        sourceMap = sourceMapping,
       },
     }
     conf.c = conf.cpp
