@@ -30,6 +30,14 @@ return {
               "%1.out.ps",
             },
           },
+          ["picoblaze"] = {
+            pattern = "(.*)%.psm$",
+            files = {
+              "%1.fmt",
+              "%1.mem",
+              "%1.log",
+            },
+          },
         },
         filesystem = {
           follow_current_file = true,
