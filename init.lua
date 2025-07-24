@@ -23,6 +23,9 @@ vim.cmd [[
   nm ä ]
 ]]
 
+vim.opt.scrolloff = 5
+vim.opt.sidescrolloff = 12
+
 require("utils.color").apply_color_overrides()
 require("utils.keybinds").set_global_keybinds()
 require("utils.pyvenv").setup_pyvenv()
