@@ -6,7 +6,7 @@ return {
     local lspconfig = require "lspconfig"
 
     local config = vim.tbl_deep_extend("force", default_config, {
-      cmd = { "clangd" },
+      cmd = { "clangd", "--completion-style=detailed" },
       on_attach = function(client, bufnr)
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
         utils.set_lsp_keybinds(client, bufnr)
