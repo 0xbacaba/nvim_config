@@ -23,8 +23,9 @@ vim.cmd [[
   nm ä ]
 ]]
 
-vim.opt.scrolloff = 5
-vim.opt.sidescrolloff = 12
+vim.o.scrolloff = 5
+vim.o.sidescrolloff = 12
+vim.o.winborder = "rounded"
 
 require("utils.color").apply_color_overrides()
 require("utils.keybinds").set_global_keybinds()
