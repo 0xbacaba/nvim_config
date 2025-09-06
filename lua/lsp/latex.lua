@@ -1,31 +1,64 @@
 local utils = require "utils"
 local skim_flag_file = utils.get_flag_dir() .. "/skim_install"
 local last_compilers_flag_file = utils.get_flag_dir() .. "/latex_last_compilers"
+local pdf_viewer_flag_file = utils.get_flag_dir() .. "/pdf_viewer"
+
+local supported_pdf_viewers = {
+  linux = {
+    okular = {
+      executable = "okular",
+      args = { "--unique", "file:%p#src:%l%f" },
+    },
+  },
+  macos = {
+    skim = {
+      executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
+      args = { "-r", "-g", "%l", "%p", "%f" },
+    },
+  },
+}
 
 local function get_forwardsearch_config()
-  local uname = utils.get_uname()
-  if uname == utils.OS.macos then
-    -- Only Skim is supported on macOS
-    local skim_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
-    if vim.fn.executable(skim_executable) == 1 then
-      return {
-        executable = skim_executable,
-        args = { "-r", "-g", "%l", "%p", "%f" },
-      }
-    end
-  elseif uname == utils.OS.linux then
-    local viewer = vim.fn.system("xdg-mime query default application/pdf"):gsub("\n", "")
+  local uname = utils.get_uname():lower()
 
-    if string.find(viewer, "okular") then
-      return {
-        executable = "okular",
-        args = { "--unique", "file:%p#src:%l%f" },
-      }
-    end
-
-    print("Unsupported pdf viewer for synctex: " .. viewer)
+  local configured_viewer
+  if vim.fn.filereadable(pdf_viewer_flag_file) == 1 then
+    configured_viewer = vim.fn.readfile(pdf_viewer_flag_file)[1]
   end
+  if supported_pdf_viewers[uname] == nil then
+    vim.lsp.log.warn("unsupported os for latex: " .. uname)
+    return {}
+  end
+
+  for alias, config in pairs(supported_pdf_viewers[uname]) do
+    if configured_viewer ~= nil then
+      if configured_viewer == alias then
+        if vim.fn.executable(config.executable) == 1 then return config end
+      end
+    else
+      if vim.fn.executable(config.executable) == 1 then
+        vim.lsp.log.info("auto-selected pdf viewer: " .. alias)
+        vim.fn.writefile({ alias }, pdf_viewer_flag_file)
+        return config
+      end
+    end
+  end
+
+  vim.lsp.log.warn "no supported pdf viewer installed"
   return {}
+end
+local function select_pdf_viewer()
+  local uname = utils.get_uname():lower()
+
+  local names = vim.tbl_keys(supported_pdf_viewers[uname])
+  vim.ui.select(names, { prompt = "Select pdf viewer" }, function(item, _)
+    for _, client in ipairs(vim.lsp.get_clients { name = "texlab" }) do
+      ---@diagnostic disable-next-line: inject-field
+      client.settings.texlab.forwardSearch = supported_pdf_viewers[uname][item]
+    end
+    vim.fn.writefile({ item }, pdf_viewer_flag_file)
+    vim.log("Using pdf viewer: " .. item, vim.log.levels.INFO)
+  end)
 end
 local function texlab_forward_search()
   -- Get the current buffer and cursor position
@@ -133,8 +166,10 @@ local function use_compiler(client, compiler, file)
     return
   end
 
+  ---@diagnostic disable-next-line: undefined-field
   if client.config.settings.texlab.build.executable ~= compiler then
     print("compiler changed to " .. compiler)
+    ---@diagnostic disable-next-line: undefined-field
     client.config.settings.texlab.build.executable = compiler
     vim.cmd "LspRestart"
   end
@@ -142,6 +177,7 @@ end
 --- Get the currently set compiler of a specific client
 ---@param client vim.lsp.Client
 ---@return string
+---@diagnostic disable-next-line: undefined-field
 local function get_compiler(client) return client.config.settings.texlab.build.executable end
 
 --- Find compilers specified at the beginning of the specified files
@@ -273,6 +309,12 @@ return {
             "<leader>lc",
             utils.mapmode.normal,
             select_compiler_for_current_client,
+          },
+          {
+            "Select pdf viewer",
+            "<leader>lp",
+            utils.mapmode.normal,
+            select_pdf_viewer,
           },
         }, bufnr)
       end,
