@@ -15,12 +15,12 @@ return {
     local cwdLogical = vim.fn.trim(vim.fn.system { "pwd", "-L" })
     local cwdPhysical = vim.fn.trim(vim.fn.system { "pwd", "-P" })
 
-    local sourceMapping = {}
+    local sourceMapping = nil
     if cwdLogical ~= cwdPhysical then
-      sourceMapping = vim.tbl_extend("force", sourceMapping, {
+      sourceMapping = {
         [cwdLogical] = cwdPhysical,
         [cwdPhysical] = cwdLogical,
-      })
+      }
     end
 
     local conf = dap.configurations
