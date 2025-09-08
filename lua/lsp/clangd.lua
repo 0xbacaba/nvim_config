@@ -6,7 +6,10 @@ return {
     local lspconfig = require "lspconfig"
 
     local config = vim.tbl_deep_extend("force", default_config, {
-      cmd = { "clangd", "--completion-style=detailed" },
+      cmd = {
+        "clangd",
+        "--completion-style=detailed",
+      },
       on_attach = function(client, bufnr)
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
         utils.set_lsp_keybinds(client, bufnr)
@@ -24,6 +27,9 @@ return {
           end
           return false
         end
+
+        -- skip checks for compile_commands if in single-file mode
+        if client.config.root_dir == nil then return end
 
         -- use compile_commands in project directory if available
         local compile_commands = client.config.root_dir .. "/compile_commands.json"
