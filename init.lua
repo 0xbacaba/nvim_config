@@ -25,7 +25,8 @@ vim.cmd [[
 
 vim.o.scrolloff = 5
 vim.o.sidescrolloff = 12
-vim.o.winborder = "rounded"
+
+if vim.version.ge(vim.version(), { 0, 11, 0 }) then vim.o.winborder = "rounded" end
 
 require("utils.color").apply_color_overrides()
 require("utils.keybinds").set_global_keybinds()
