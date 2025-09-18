@@ -4,13 +4,13 @@ local last_compilers_flag_file = utils.get_flag_dir() .. "/latex_last_compilers"
 local pdf_viewer_flag_file = utils.get_flag_dir() .. "/pdf_viewer"
 
 local supported_pdf_viewers = {
-  linux = {
+  [utils.OS.linux] = {
     okular = {
       executable = "okular",
       args = { "--unique", "file:%p#src:%l%f" },
     },
   },
-  macos = {
+  [utils.OS.macos] = {
     skim = {
       executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
       args = { "-r", "-g", "%l", "%p", "%f" },
@@ -19,7 +19,7 @@ local supported_pdf_viewers = {
 }
 
 local function get_forwardsearch_config()
-  local uname = utils.get_uname():lower()
+  local uname = utils.get_uname()
 
   local configured_viewer
   if vim.fn.filereadable(pdf_viewer_flag_file) == 1 then
@@ -48,7 +48,7 @@ local function get_forwardsearch_config()
   return {}
 end
 local function select_pdf_viewer()
-  local uname = utils.get_uname():lower()
+  local uname = utils.get_uname()
 
   local names = vim.tbl_keys(supported_pdf_viewers[uname])
   vim.ui.select(names, { prompt = "Select pdf viewer" }, function(item, _)
@@ -57,7 +57,7 @@ local function select_pdf_viewer()
       client.settings.texlab.forwardSearch = supported_pdf_viewers[uname][item]
     end
     vim.fn.writefile({ item }, pdf_viewer_flag_file)
-    vim.log("Using pdf viewer: " .. item, vim.log.levels.INFO)
+    vim.notify("Using pdf viewer: " .. item, vim.log.levels.INFO)
   end)
 end
 local function texlab_forward_search()
