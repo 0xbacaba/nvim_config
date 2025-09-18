@@ -14,11 +14,14 @@ return {
         "rust_analyzer",
         "taplo",
         "jdtls",
-        "clangd",
         "texlab",
         "pylsp",
       }
       if vim.fn.executable "npm" == 1 then table.insert(ensure_installed, "ts_ls") end
+      local os = require "utils.os"
+      if os.get_uname() ~= os.OS.linux and os.is_architecture(os.ARCH.arm) then
+        table.insert(ensure_installed, "clangd")
+      end
 
       require("mason-lspconfig").setup {
         ensure_installed = ensure_installed,
@@ -63,7 +66,7 @@ return {
       }
 
       require("lsp/java").setup(default_config)
-      require("lsp/clangd").setup(default_config)
+      if vim.fn.executable "clangd" == 1 then require("lsp/clangd").setup(default_config) end
       require("lsp/latex").setup(default_config)
       require("lsp/python").setup(default_config)
     end,
