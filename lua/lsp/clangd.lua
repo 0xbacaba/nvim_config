@@ -59,8 +59,8 @@ return {
         "sketch.yaml", -- arduino-specific
         "*.ino",
 
-        ".git", -- general
-        "CMakeLists.txt"
+        "CMakeLists.txt", -- general
+        ".git"
       ),
       filetypes = { "c", "cpp", "arduino" },
       init_options = {
