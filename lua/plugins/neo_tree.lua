@@ -38,6 +38,18 @@ return {
               "%1.log",
             },
           },
+          ["c"] = {
+            pattern = "(.*)%.c",
+            files = {
+              "%1.o",
+            },
+          },
+          ["cpp"] = {
+            pattern = "(.*)%.cpp",
+            files = {
+              "%1.o",
+            },
+          },
         },
         filesystem = {
           follow_current_file = true,
