@@ -99,6 +99,7 @@ return {
   setup = function(default_config)
     local jdtls = require "jdtls"
     local lspconfig = require "lspconfig"
+    local lspcommon = require "lsp.common"
 
     -- File types that signify a Java project's root directory. This will be
     -- used by eclipse to determine what constitutes a workspace
@@ -155,7 +156,7 @@ return {
         debounce_text_changes = 80,
       },
       on_attach = on_attach, -- We pass our on_attach keybindings to the configuration map
-      root_dir = lspconfig.util.root_pattern(unpack_func(root_markers)), -- Set the root directory to our found root_marker
+      root_dir = lspcommon.root_pattern(unpack_func(root_markers)), -- Set the root directory to our found root_marker
       init_options = {
         bundles = bundles,
       },

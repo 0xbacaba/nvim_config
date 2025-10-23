@@ -20,17 +20,17 @@ return {
         end
       end
 
-      local keys = {}
-      local values = {}
-      local actual_selection = values
+      local actual_selection = {}
       for k, v in pairs(current_selection) do
-        if type(k) ~= "number" then actual_selection = keys end
-
-        table.insert(keys, k)
-        table.insert(values, v)
+        if type(k) ~= "number" then
+          table.insert(actual_selection, k)
+        else
+          table.insert(actual_selection, v)
+        end
       end
 
       vim.ui.select(actual_selection, { prompt = title }, function(choice)
+        if choice == "" or choice == nil then return end
         table.insert(selection_path, choice)
         show_selection()
       end)

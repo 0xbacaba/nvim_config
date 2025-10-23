@@ -4,6 +4,7 @@ local arduino = require "utils.arduino"
 return {
   setup = function(default_config)
     local lspconfig = require "lspconfig"
+    local lspcommon = require "lsp.common"
 
     local config = vim.tbl_deep_extend("force", default_config, {
       cmd = {
@@ -55,7 +56,7 @@ return {
           vim.cmd "LspRestart"
         end
       end,
-      root_dir = lspconfig.util.root_pattern(
+      root_dir = lspcommon.root_pattern(
         "sketch.yaml", -- arduino-specific
         "*.ino",
 

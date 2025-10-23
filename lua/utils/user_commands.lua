@@ -20,6 +20,30 @@ local user_commands = {
     end,
     opts = {},
   },
+  {
+    command = "LspRoot",
+    func = function()
+      local lsp_common = require "lsp.common"
+      local add_root_dir_title = "Add root dir"
+      require("utils.user_input").show_selection_tree("Select action", {
+        add_root_dir_title,
+        ["Remove root dir"] = lsp_common.get_root_dirs(),
+      }, function(selection)
+        if selection == add_root_dir_title then
+          vim.ui.input({ prompt = "Path: ", default = vim.fn.getcwd(), completion = "dir" }, function(input)
+            if input == add_root_dir_title then
+              vim.notify("invalid root dir", vim.log.levels.ERROR)
+              return
+            end
+            lsp_common.add_root_dir(input)
+          end)
+        else
+          lsp_common.remove_root_dir(selection)
+        end
+      end)
+    end,
+    opts = {},
+  },
 }
 
 local M = {
