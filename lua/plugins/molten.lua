@@ -4,6 +4,7 @@ local keybind_descs = {
   run_cell = "Run cell",
   run_cell_and_above = "Run cell and above",
   run_all = "Run all",
+  enter_output = "Enter output",
   show_output = "Show output",
   hide_output = "Hide output",
   delete_cell = "Delete cell",
@@ -15,6 +16,7 @@ local keybinds = {
   { keybind_descs.run_line, "<leader>me", keybind_util.mapmode.normal, ":MoltenEvaluateLine<CR>" },
   { keybind_descs.run_cell, "<leader>mr", keybind_util.mapmode.normal, ":MoltenReevaluateCell<CR>" },
   { keybind_descs.run_all, "<leader>mR", keybind_util.mapmode.normal, ":MoltenReevaluateAll<CR>" },
+  { keybind_descs.enter_output, "<leader>mO", keybind_util.mapmode.normal, ":MoltenEnterOutput<CR>" },
   { keybind_descs.show_output, "<leader>mo", keybind_util.mapmode.normal, ":MoltenShowOutput<CR>" },
   { keybind_descs.hide_output, "<leader>mh", keybind_util.mapmode.normal, ":MoltenHideOutput<CR>" },
   { keybind_descs.delete_cell, "<leader>md", keybind_util.mapmode.normal, ":MoltenDelete<CR>" },
@@ -44,7 +46,7 @@ return {
     dependencies = {
       "jmbuhr/otter.nvim",
     },
-    ft = { "quarto", "markdown" },
+    ft = { "quarto" },
     config = function()
       local quarto = require "quarto"
       quarto.setup {
@@ -81,12 +83,14 @@ return {
         { keybind_descs.run_cell_and_above, "<leader>ma", keybind_util.mapmode.normal, runner.run_above },
       }
       for _, v in ipairs(keybinds) do
-        ---@diagnostic disable-next-line: assign-type-mismatch
-        v[4] = runner_map[v[1]]
-        if v[4] ~= nil then table.insert(quarto_keybinds, v) end
+        local action = runner_map[v[1]]
+        if action ~= nil then
+          ---@diagnostic disable-next-line: assign-type-mismatch
+          v[4] = action
+          table.insert(quarto_keybinds, v)
+        end
       end
 
-      require("which-key").add { "<leader>m", group = "molten", mode = { "n", "v" } }
       keybind_util.set_keybinds(quarto_keybinds)
     end,
   },
