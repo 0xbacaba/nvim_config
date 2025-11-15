@@ -30,4 +30,16 @@ return {
       })
     end,
   },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = {
+      "nvim-mini/mini.icons",
+    },
+    opts = {
+      heading = {
+        icons = {},
+      },
+      file_types = { "quarto" },
+    },
+  },
 }
