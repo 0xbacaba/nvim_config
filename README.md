@@ -1,6 +1,6 @@
 # nvim_config
 
-Currently configured LSPs for:
+#### Currently configured LSPs for:
 
 - java [\[jdtls\]](https://github.com/mfussenegger/nvim-jdtls)
   - [java-test](https://github.com/microsoft/vscode-java-test) for unit testing
@@ -45,8 +45,21 @@ Currently configured LSPs for:
   </details>
 
 ---
+#### Jupyter notebooks:
 
-Image support:
+Supported by using:
+- [jupytext.nvim](https://github.com/GCBallesteros/jupytext.nvim)
+- [quarto-nvim](https://github.com/quarto-dev/quarto-nvim)
+- [otter.nvim](https://github.com/jmbuhr/otter.nvim)
+- [molten-nvim](https://github.com/benlubas/molten-nvim)
+
+Requirements:
+- [quarto-cli](https://github.com/quarto-dev/quarto-cli) needs to be installed
+- Molten needs to be configured (if it does not work by default, try running `:UpdateRemotePlugins`)
+
+---
+
+#### Image support:
 
 - Implemented using [image.nvim](https://github.com/3rd/image.nvim)
 
