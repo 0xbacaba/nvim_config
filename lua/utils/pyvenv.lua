@@ -12,7 +12,7 @@ M = {
   setup_pyvenv = function()
     local pyvenv = pyvenv_dir()
 
-    if vim.fn.isdirectory(pyvenv) == 1 then
+    if vim.fn.executable(pyvenv .. "/bin/python3") == 1 then
       vim.g.python3_host_prog = pyvenv .. "/bin/python3"
       return
     end
@@ -57,11 +57,11 @@ M = {
     if package ~= nil then command = command .. package end
     utils.ask_to_run(command, function(success)
       if success then
-        vim.schedule(function() vim.notify(package .. " installation successful") end)
+        vim.schedule(function() vim.notify((package or "package") .. " installation successful") end)
         return
       end
 
-      vim.schedule(function() vim.notify(package .. " installation failed", vim.log.levels.WARN) end)
+      vim.schedule(function() vim.notify((package or "package") .. " installation failed", vim.log.levels.WARN) end)
     end)
   end,
 
