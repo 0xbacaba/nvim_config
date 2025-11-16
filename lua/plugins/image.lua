@@ -41,16 +41,7 @@ return {
   {
     "3rd/image.nvim",
     dependencies = {
-      "leafo/magick",
       "nvim-lua/plenary.nvim",
-      {
-        "vhyrro/luarocks.nvim",
-        opts = {
-          rocks = {
-            hererocks = true,
-          },
-        },
-      },
     },
     build = false,
     config = function()
@@ -72,7 +63,7 @@ return {
       require("image").setup {
         backend = backend,
         kitty_method = "normal",
-        processor = "magick_rock",
+        processor = "magick_cli",
         integrations = {
           markdown = {
             enabled = true,
