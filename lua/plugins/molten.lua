@@ -48,6 +48,7 @@ return {
     },
     ft = { "quarto" },
     config = function()
+      if vim.filetype ~= "quarto" then return end
       local quarto = require "quarto"
       quarto.setup {
         lspFeatures = {
