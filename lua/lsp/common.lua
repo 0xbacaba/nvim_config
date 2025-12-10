@@ -37,7 +37,7 @@ M = {
       -- check if the startpath starts with any configured root dir
       for _, v in ipairs(M.get_root_dirs()) do
         if v ~= "" then
-          if startpath:sub(0, v:len()) == v then return v end
+          if vim.startswith(startpath, v) then return v end
         end
       end
       -- otherwise use the lspconfig root pattern
