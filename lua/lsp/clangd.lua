@@ -57,6 +57,8 @@ return {
         end
       end,
       root_dir = lspcommon.root_pattern(
+        "compile_commands.json",
+
         "sketch.yaml", -- arduino-specific
         "*.ino",
 
