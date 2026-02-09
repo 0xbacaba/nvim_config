@@ -32,3 +32,11 @@ require("utils.color").apply_color_overrides()
 require("utils.keybinds").set_global_keybinds()
 require("utils.pyvenv").setup_pyvenv()
 require("utils.user_commands").setup_user_commands()
+
+vim.lsp.util.open_floating_preview = (function(orig)
+  return function(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = opts.border or "rounded"
+    return orig(contents, syntax, opts, ...)
+  end
+end)(vim.lsp.util.open_floating_preview)

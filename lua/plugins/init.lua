@@ -1,7 +1,7 @@
 return {
   {
     "williamboman/mason.nvim",
-    config = function() require("mason").setup() end,
+    config = function() require("mason").setup { ui = { border = "rounded" } } end,
   },
   {
     "williamboman/mason-lspconfig.nvim",
@@ -27,29 +27,6 @@ return {
         ensure_installed = ensure_installed,
         automatic_installation = true,
       }
-    end,
-  },
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    dependencies = {
-      "williamboman/mason-lspconfig.nvim",
-    },
-    config = function()
-      require("mason-nvim-dap").setup {
-        ensure_installed = {
-          "javadbg",
-          "javatest",
-
-          "codelldb",
-
-          "debugpy",
-        },
-        automatic_installation = true,
-      }
-
-      require("debug/codelldb").setup()
-      require("debug/jdtls").setup()
-      require("debug/debugpy").setup()
     end,
   },
   {
@@ -84,10 +61,5 @@ return {
     end,
   },
   { "mfussenegger/nvim-jdtls" },
-  { "mfussenegger/nvim-dap" },
   { "mfussenegger/nvim-dap-python" },
-  {
-    "stevearc/overseer.nvim",
-    config = function() require("overseer").setup() end,
-  },
 }
