@@ -49,6 +49,11 @@ return {
       }
     end
 
+    local preRun = {
+      "type format add -f hex uint8_t",
+      'type format add -f hex "unsigned char"',
+    }
+
     local conf = dap.configurations
     conf.cpp = {
       {
@@ -59,6 +64,7 @@ return {
         cwd = "${workspaceFolder}",
         stopOnEntry = false,
         sourceMap = sourceMapping,
+        preRunCommands = preRun,
       },
     }
     conf.c = conf.cpp
