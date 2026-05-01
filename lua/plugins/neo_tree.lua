@@ -48,6 +48,14 @@ return {
             pattern = "(.*)%.cpp",
             files = {
               "%1.o",
+              "%1.d",
+            },
+          },
+          ["ipynb"] = {
+            pattern = "(.*)%.ipynb",
+            files = {
+              "%1.qmd",
+              "%1/",
             },
           },
         },
