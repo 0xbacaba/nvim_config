@@ -40,3 +40,12 @@ vim.lsp.util.open_floating_preview = (function(orig)
     return orig(contents, syntax, opts, ...)
   end
 end)(vim.lsp.util.open_floating_preview)
+
+local function disable_autoformat(filetype)
+  vim.api.nvim_create_autocmd("Filetype", {
+    pattern = filetype,
+    callback = function() vim.b.autoformat = false end,
+  })
+end
+
+disable_autoformat "java"
