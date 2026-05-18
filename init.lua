@@ -27,6 +27,26 @@ vim.o.scrolloff = 5
 vim.o.sidescrolloff = 12
 
 if vim.version.ge(vim.version(), { 0, 11, 0 }) then vim.o.winborder = "rounded" end
+if vim.version.ge(vim.version(), { 0, 12, 0 }) then
+  require("vim._core.ui2").enable {
+    enable = true,
+    msg = {
+      cmd = {
+        height = 0.5,
+      },
+      dialog = {
+        height = 0.5,
+      },
+      msg = {
+        height = 0.5,
+        timeout = 4000,
+      },
+      pager = {
+        height = 1,
+      },
+    },
+  }
+end
 
 require("utils.color").apply_color_overrides()
 require("utils.keybinds").set_global_keybinds()
