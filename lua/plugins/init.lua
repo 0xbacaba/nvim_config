@@ -43,7 +43,10 @@ return {
       }
 
       require("lsp/java").setup(default_config)
-      if vim.fn.executable "clangd" == 1 then require("lsp/clangd").setup(default_config) end
+      if vim.fn.executable "clangd" == 1 then
+        require("lsp/clangd").setup(default_config)
+        require("lsp/arduino").setup(default_config)
+      end
       require("lsp/latex").setup(default_config)
       require("lsp/python").setup(default_config)
     end,

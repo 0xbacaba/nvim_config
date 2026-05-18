@@ -2,11 +2,13 @@ local utils = require "utils"
 
 local M
 M = {
-
+  --- @return boolean
   is_arduino_project = function(lspclient)
     if lspclient.config.root_dir == nil then return false end
     return vim.fn.glob(lspclient.config.root_dir .. "/*.ino") ~= ""
   end,
+
+  --- @return string
   get_build_dir = function()
     local uname = utils.get_uname()
     local home = os.getenv "HOME"
@@ -19,6 +21,14 @@ M = {
 
     return ""
   end,
+  --- @return string
+  get_config_dir = function() return vim.fn.fnamemodify(M.get_config_file(), ":h") end,
+  --- @return string
+  get_config_file = function()
+    return os.getenv "ARDUINO_CONFIG_FILE"
+      or ((os.getenv "ARDUINO_DIRECTORIES_DATA" or "~/.arduino15") .. "/arduino-cli.yaml")
+  end,
+  --- @return string|nil
   find_project_build_dir = function(project_dir)
     local potential_dirs = vim.fn.split(vim.fn.glob(M.get_build_dir() .. "/*/"), "\n")
 

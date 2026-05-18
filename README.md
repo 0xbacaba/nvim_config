@@ -9,7 +9,8 @@
 
 - c/c++ [\[clangd\]](https://clangd.llvm.org)
 
-- arduino [\[clangd\]](https://clangd.llvm.org)
+- arduino [\[clangd](https://clangd.llvm.org), [arduino-language-server\]](https://github.com/arduino/arduino-language-server)
+  - The arduino-lsp isn't great yet, so if you want to disable it, run `:LspStop arduino-language-server`.
 
 - python [\[pylsp\]](https://github.com/python-lsp/python-lsp-server)
   - [nvim-dap-python](https://github.com/mfussenegger/nvim-dap-python) for debugging
