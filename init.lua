@@ -62,7 +62,7 @@ vim.lsp.util.open_floating_preview = (function(orig)
 end)(vim.lsp.util.open_floating_preview)
 
 local function disable_autoformat(filetype)
-  vim.api.nvim_create_autocmd("Filetype", {
+  vim.api.nvim_create_autocmd("FileType", {
     pattern = filetype,
     callback = function() vim.b.autoformat = false end,
   })
