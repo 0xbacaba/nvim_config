@@ -20,8 +20,7 @@ M = {
         pylsp = {
           plugins = {
             pycodestyle = {
-              ignore = { "W391", "E302", "E303", "W293" },
-              maxLineLength = 200,
+              enabled = false,
             },
           },
         },
