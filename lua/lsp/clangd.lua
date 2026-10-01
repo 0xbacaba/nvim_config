@@ -10,6 +10,9 @@ return {
       cmd = {
         "clangd",
         "--completion-style=detailed",
+        "--fallback-style=none",
+        "--clang-tidy",
+        "--log=verbose",
       },
       on_attach = function(client, bufnr)
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -62,8 +65,9 @@ return {
         "sketch.yaml", -- arduino-specific
         "*.ino",
 
-        "CMakeLists.txt", -- general
-        ".git"
+        ".gitmodules", -- general
+        ".git",
+        "CMakeLists.txt"
       ),
       filetypes = { "c", "cpp", "arduino" },
       init_options = {
