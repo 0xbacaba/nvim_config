@@ -113,6 +113,12 @@ local definitions = {
 return {
   mapmode = mode,
   keybinds = definitions,
+
+  ---@param mapmode string|string[]
+  ---@param lhs string
+  ---@param rhs string|function
+  ---@param bufopts? vim.keymap.set.Opts
+  ---@param desc string
   map = function(mapmode, lhs, rhs, bufopts, desc)
     if lhs == nil or rhs == nil then
       vim.notify("tried to map nil value " .. tostring(lhs) .. " -> " .. tostring(rhs), vim.log.levels.WARN)
@@ -121,7 +127,17 @@ return {
     bufopts.desc = desc
     vim.keymap.set(mapmode, lhs, rhs, bufopts)
   end,
+
+  ---@param lhs string
+  ---@param rhs string|function
+  ---@param bufopts? vim.keymap.set.Opts
+  ---@param desc string
   nmap = function(lhs, rhs, bufopts, desc) require("utils").map("n", lhs, rhs, bufopts, desc) end,
+
+  ---@param lhs string
+  ---@param rhs string|function
+  ---@param bufopts? vim.keymap.set.Opts
+  ---@param desc string
   vmap = function(lhs, rhs, bufopts, desc) require("utils").map("v", lhs, rhs, bufopts, desc) end,
   set_keybinds = function(keybinds, bufnr)
     local utils = require "utils"
