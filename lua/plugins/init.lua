@@ -32,15 +32,12 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      local lspconfig = require "lspconfig"
-      local mason_lspconfig = require "mason-lspconfig"
-
       local utils = require "utils"
-      local default_config = { on_attach = utils.set_lsp_keybinds }
+      local default_config = {}
 
-      mason_lspconfig.setup_handlers {
-        function(server_name) lspconfig[server_name].setup(default_config) end,
-      }
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args) utils.set_lsp_keybinds(nil, args.buf) end,
+      })
 
       require("lsp/java").setup(default_config)
       if vim.fn.executable "clangd" == 1 then
@@ -52,37 +49,10 @@ return {
       if vim.fn.executable "neocmakelsp" == 1 then require("lsp/cmake").setup(default_config) end
     end,
   },
-  {
-    "nvim-treesitter/nvim-treesitter",
-    config = function()
-      require("nvim-treesitter.configs").setup {
-        ensure_installed = { "c", "cpp", "arduino", "lua", "java" },
-        sync_install = false,
-        auto_install = true,
-        modules = {},
-        ignore_install = { "latex" },
-      }
-    end,
-  },
   { "mfussenegger/nvim-jdtls" },
   { "mfussenegger/nvim-dap-python" },
   {
     "stevearc/overseer.nvim",
     config = function() require("overseer").setup() end,
-  },
-  {
-    "nvimtools/none-ls.nvim",
-    config = function()
-      local null_ls = require "null-ls"
-      null_ls.setup {
-        debug = true,
-        sources = {
-          null_ls.builtins.formatting.stylua,
-          null_ls.builtins.formatting.clang_format.with {
-            command = "/usr/bin/clang-format",
-          },
-        },
-      }
-    end,
   },
 }

@@ -16,7 +16,6 @@ if not pcall(require, "lazy") then
 end
 
 require "lazy_setup"
--- require "polish"
 
 vim.cmd [[
   nm ö [
