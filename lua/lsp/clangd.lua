@@ -47,7 +47,6 @@ end
 
 return {
   setup = function(default_config)
-    local lspconfig = require "lspconfig"
     local lspcommon = require "lsp.common"
 
     local config = vim.tbl_deep_extend("force", default_config, {
@@ -85,6 +84,7 @@ return {
       },
     })
 
-    lspconfig.clangd.setup(config)
+    vim.lsp.config("clangd", config)
+    vim.lsp.enable "clangd"
   end,
 }

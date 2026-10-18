@@ -31,7 +31,8 @@ M = {
     })
 
     require("utils.pyvenv").pip_install_needed "python-lsp-server[all]"
-    require("lspconfig").pylsp.setup(config)
+    vim.lsp.config("pylsp", config)
+    vim.lsp.enable "pylsp"
   end,
 }
 

@@ -98,7 +98,6 @@ end
 return {
   setup = function(default_config)
     local jdtls = require "jdtls"
-    local lspconfig = require "lspconfig"
     local lspcommon = require "lsp.common"
 
     -- File types that signify a Java project's root directory. This will be
@@ -271,6 +270,7 @@ return {
 
     -- Finally, start jdtls. This will run the language server using the configuration we specified,
     -- setup the keymappings, and attach the LSP client to the current buffer
-    lspconfig.jdtls.setup(config)
+    vim.lsp.config("jdtls", config)
+    vim.lsp.enable "jdtls"
   end,
 }

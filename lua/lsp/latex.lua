@@ -288,6 +288,7 @@ end
 
 return {
   setup = function(default_config)
+    ---@type vim.lsp.Config
     local config = vim.tbl_deep_extend("force", default_config, {
       on_attach = function(client, bufnr)
         local uname = utils.get_uname()
@@ -334,6 +335,7 @@ return {
       },
     })
 
-    require("lspconfig").texlab.setup(config)
+    vim.lsp.config("texlab", config)
+    vim.lsp.enable "texlab"
   end,
 }

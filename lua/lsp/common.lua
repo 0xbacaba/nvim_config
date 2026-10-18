@@ -32,16 +32,24 @@ M = {
   get_root_dirs = function() return vim.fn.readfile(get_root_dir_flag()) end,
   ---@param ...any
   root_pattern = function(...)
-    local lspconfig_root_pattern = require("lspconfig").util.root_pattern(...)
-    return function(startpath)
+    local markers = { ... }
+    return function(bufnr, on_dir)
+      local startpath = vim.api.nvim_buf_get_name(bufnr)
+      local root_dir
       -- check if the startpath starts with any configured root dir
       for _, v in ipairs(M.get_root_dirs()) do
         if v ~= "" then
-          if vim.startswith(startpath, v) then return v end
+          if vim.startswith(startpath, v) then
+            root_dir = v
+            break
+          end
         end
       end
+
       -- otherwise use the lspconfig root pattern
-      return lspconfig_root_pattern(startpath)
+      if not root_dir then root_dir = vim.fs.root(startpath, markers) end
+
+      on_dir(root_dir)
     end
   end,
 }
