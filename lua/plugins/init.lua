@@ -47,6 +47,7 @@ return {
       require("lsp/latex").setup(default_config)
       require("lsp/python").setup(default_config)
       if vim.fn.executable "neocmakelsp" == 1 then require("lsp/cmake").setup(default_config) end
+      if vim.fn.executable "nix" == 1 then require("lsp/nix").setup(default_config) end
     end,
   },
   { "mfussenegger/nvim-jdtls" },
