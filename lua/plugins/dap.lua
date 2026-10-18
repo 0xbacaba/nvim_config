@@ -20,6 +20,7 @@ return {
       require("debug/codelldb").setup()
       require("debug/jdtls").setup()
       require("debug/debugpy").setup()
+      require("debug/metals").setup()
     end,
   },
   {
