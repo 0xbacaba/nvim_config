@@ -41,7 +41,7 @@ local function find_compile_commands(client, bufopts)
       return
     end
     client.config.cmd = vim.list_extend(client.config.cmd, { "--compile-commands-dir=" .. build_dir })
-    vim.cmd "LspRestart"
+    vim.cmd "lsp restart clangd"
   end
 end
 
