@@ -1,10 +1,9 @@
 return {
   setup = function(default_config)
-    local lspconfig = require "lspconfig"
     local config = vim.tbl_deep_extend("force", default_config, {
       cmd = { "neocmakelsp", "stdio" },
       filetypes = { "cmake" },
-      root_dir = lspconfig.util.root_pattern ".git",
+      root_markers = { ".git", ".cmake-format.py" },
       single_file_support = true,
       init_options = {
         format = {
@@ -17,6 +16,7 @@ return {
       },
     })
 
-    lspconfig.neocmake.setup(config)
+    vim.lsp.config("neocmake", config)
+    vim.lsp.enable "neocmake"
   end,
 }
